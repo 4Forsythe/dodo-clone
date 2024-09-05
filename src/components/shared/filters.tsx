@@ -1,9 +1,10 @@
 import React from 'react'
 
-import { Input } from '@/components/ui'
 import { Heading } from './heading'
+import { FilterCheckbox, IFilterCheckbox } from './filter-checkbox'
+import { RangeSlider } from './range-slider'
+import { Input } from '@/components/ui'
 import { FilterCheckboxGroup } from './filter-checkbox-group'
-import { FilterCheckbox, type IFilterCheckbox } from './filter-checkbox'
 
 const ingredients: IFilterCheckbox[] = [
   {
@@ -19,11 +20,11 @@ const ingredients: IFilterCheckbox[] = [
     value: '3',
   },
   {
-    text: 'Красный лук',
+    text: 'Соленые огурчики',
     value: '4',
   },
   {
-    text: 'Соленые огурчики',
+    text: 'Красный лук',
     value: '5',
   },
   {
@@ -54,6 +55,7 @@ export const Filters: React.FC<IFilters> = ({ className }) => {
           <Input min={275} max={1250} type="number" placeholder="от 275 ₽" />
           <Input min={275} max={1250} type="number" placeholder="до 1250 ₽" />
         </div>
+        <RangeSlider min={275} max={1250} step={10} value={[275, 1250]} />
       </div>
 
       {/* Ингредиенты */}
