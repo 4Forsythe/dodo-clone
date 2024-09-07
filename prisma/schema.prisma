@@ -49,11 +49,11 @@ model CartItem {
   id              String            @id   @default(uuid())
 
   quantity        Int               @default(1)
-  productId       Int
+  variantId       Int
   doppings        Ingredient[]
   cartId          String
 
-  product         Product           @relation(fields: [productId], references: [id])
+  variant         ProductVariant    @relation(fields: [variantId], references: [id])
   cart            Cart              @relation(fields: [cartId], references: [id])
 
   createdAt       DateTime          @default(now())
@@ -124,6 +124,8 @@ model ProductVariant {
   price           Int
   productId       Int
 
+  cartItems       CartItem[]
+
   product         Product           @relation(fields: [productId], references: [id])
 }
 
@@ -138,7 +140,6 @@ model Product {
   category        Category          @relation(fields: [categoryId], references: [id])
   variants        ProductVariant[]
   ingredients     Ingredient[]
-  cartItems       CartItem[]
 
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt

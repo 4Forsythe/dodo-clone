@@ -24,24 +24,19 @@ async function main() {
 
 /* Генерация данных */
 async function up() {
-  await prisma.user.createMany({
-    data: Array.from({ length: 5 }, () => ({
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-      password: hashSync(faker.internet.password(), 12),
-    })),
-  })
-
+  /* Категории */
   await prisma.category.createMany({
     data: categories,
   })
 
+  /* Ингредиенты */
   await prisma.ingredient.createMany({
     data: ingredients,
   })
 
+  /* Товары с вариациями */
   productsWithVariants.map(async (product) => {
-    const productWithVariants = await prisma.product.create({
+    const { id } = await prisma.product.create({
       data: {
         ...product,
         ingredients: {
@@ -57,7 +52,7 @@ async function up() {
       size: [25, 30, 35][faker.number.int({ min: 0, max: 2 })],
       doughType: faker.number.int({ min: 1, max: 2 }),
       price: faker.number.int({ min: 275, max: 1065 }),
-      productId: productWithVariants.id,
+      productId: id,
     }))
 
     await prisma.productVariant.createMany({
@@ -65,14 +60,60 @@ async function up() {
     })
   })
 
-  await prisma.product.createMany({
-    data: products,
+  /* Товары без вариаций */
+  products.map(async (product) => {
+    const { id } = await prisma.product.create({
+      data: product,
+    })
+
+    const variant = {
+      price: faker.number.int({ min: 125, max: 485 }),
+      productId: id,
+    }
+
+    await prisma.productVariant.createMany({
+      data: variant,
+    })
+  })
+
+  /* Юзеры и товары в корзинах */
+  Array.from({ length: 5 }, async () => {
+    const user = await prisma.user.create({
+      data: {
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+        password: hashSync(faker.internet.password(), 12),
+      },
+    })
+
+    const cart = await prisma.cart.create({
+      data: {
+        userId: user.id,
+        token: user.id,
+      },
+    })
+
+    Array.from({ length: 3 }, async () => {
+      await prisma.cartItem.create({
+        data: {
+          variantId: faker.number.int({ min: 1, max: 26 }),
+          cartId: cart.id,
+          doppings: {
+            connect: Array.from({ length: 3 }, () => {
+              return { id: faker.number.int({ min: 1, max: 17 }) }
+            }),
+          },
+        },
+      })
+    })
   })
 }
 
 /* Очистка данных */
 async function down() {
   await prisma.$executeRaw`TRUNCATE TABLE "User" RESTART IDENTITY CASCADE`
+  await prisma.$executeRaw`TRUNCATE TABLE "Cart" RESTART IDENTITY CASCADE`
+  await prisma.$executeRaw`TRUNCATE TABLE "CartItem" RESTART IDENTITY CASCADE`
   await prisma.$executeRaw`TRUNCATE TABLE "Category" RESTART IDENTITY CASCADE`
   await prisma.$executeRaw`TRUNCATE TABLE "Ingredient" RESTART IDENTITY CASCADE`
   await prisma.$executeRaw`TRUNCATE TABLE "ProductVariant" RESTART IDENTITY CASCADE`
