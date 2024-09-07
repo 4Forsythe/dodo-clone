@@ -3,7 +3,12 @@ import { PrismaClient } from '@prisma/client'
 import { hashSync } from 'bcrypt'
 import { faker } from '@faker-js/faker'
 
-import { categories, ingredients, products } from '../src/constants/seed.constants'
+import {
+  categories,
+  ingredients,
+  products,
+  productsWithVariants,
+} from '../src/constants/seed.constants'
 
 const prisma = new PrismaClient()
 
@@ -35,6 +40,31 @@ async function up() {
     data: ingredients,
   })
 
+  productsWithVariants.map(async (product) => {
+    const productWithVariants = await prisma.product.create({
+      data: {
+        ...product,
+        ingredients: {
+          connect: ingredients.slice(
+            faker.number.int({ min: 0, max: ingredients.length / 2 }),
+            faker.number.int({ min: ingredients.length / 2, max: ingredients.length })
+          ),
+        },
+      },
+    })
+
+    const variants = Array.from({ length: 3 }, () => ({
+      size: [25, 30, 35][faker.number.int({ min: 0, max: 2 })],
+      doughType: faker.number.int({ min: 1, max: 2 }),
+      price: faker.number.int({ min: 275, max: 1065 }),
+      productId: productWithVariants.id,
+    }))
+
+    await prisma.productVariant.createMany({
+      data: variants,
+    })
+  })
+
   await prisma.product.createMany({
     data: products,
   })
@@ -45,6 +75,7 @@ async function down() {
   await prisma.$executeRaw`TRUNCATE TABLE "User" RESTART IDENTITY CASCADE`
   await prisma.$executeRaw`TRUNCATE TABLE "Category" RESTART IDENTITY CASCADE`
   await prisma.$executeRaw`TRUNCATE TABLE "Ingredient" RESTART IDENTITY CASCADE`
+  await prisma.$executeRaw`TRUNCATE TABLE "ProductVariant" RESTART IDENTITY CASCADE`
   await prisma.$executeRaw`TRUNCATE TABLE "Product" RESTART IDENTITY CASCADE`
 }
 
