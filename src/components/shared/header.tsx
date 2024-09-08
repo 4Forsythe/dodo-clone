@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
 
 import { Button } from '@/components/ui'
-import { Container } from '@/components/shared'
+import { Container, SearchBar } from '@/components/shared'
 
 interface IHeader {
   className?: string
@@ -26,6 +26,11 @@ export const Header: React.FC<IHeader> = ({ className }) => {
             <p className="text-xs text-gray-600 font-bold leading-[14px]">Сеть №1 в России</p>
             <p className="text-xs text-primary font-bold leading-[14px]">по количеству пиццерий</p>
           </div>
+        </div>
+
+        {/* Поиск */}
+        <div className="mx-10 mr-10 grow">
+          <SearchBar />
         </div>
 
         {/* Взаимодействие */}
