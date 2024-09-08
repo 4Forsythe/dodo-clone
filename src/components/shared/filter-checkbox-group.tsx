@@ -3,37 +3,42 @@
 import React from 'react'
 
 import { cn } from '@/lib/utils'
+import { ChevronRight } from 'lucide-react'
 
 import { Input } from '@/components/ui'
 import { FilterCheckbox, IFilterCheckbox } from './filter-checkbox'
-import { ArrowDown, ArrowUp, ChevronDown, ChevronRight } from 'lucide-react'
 
 type Item = IFilterCheckbox
 
 interface IFilterCheckboxGroup {
+  id: string
   text: string
   items: Item[]
-  defaultItems: Item[]
-  defaultValues?: string[]
+  shortItems?: Item[]
   limit?: number
   searchPlaceholder?: string
+  values?: Set<string>
+  onChange?: (value: string) => void
   className?: string
-  onChange?: (values: string[]) => void
 }
 
 export const FilterCheckboxGroup: React.FC<IFilterCheckboxGroup> = ({
+  id,
   text,
   items,
-  defaultItems,
-  defaultValues,
+  shortItems,
   limit = 5,
   searchPlaceholder = 'Найти...',
-  className,
+  values,
   onChange,
+  className,
 }) => {
+  const [query, setQuery] = React.useState('')
   const [isPopup, setIsPopup] = React.useState(false)
 
-  const list = isPopup ? items : defaultItems.slice(0, limit)
+  const list = isPopup
+    ? items.filter((item) => item.text.toLowerCase().includes(query.toLowerCase()))
+    : (shortItems || items).slice(0, limit)
 
   return (
     <div className={cn('py-6 pb-7 flex flex-col border-t border-neutral-200', className)}>
@@ -42,27 +47,33 @@ export const FilterCheckboxGroup: React.FC<IFilterCheckboxGroup> = ({
       {/* Расширенный поиск */}
       {isPopup && (
         <div className="mb-5">
-          <Input className="bg-neutral-50 border-none" placeholder={searchPlaceholder} />
+          <Input
+            className="bg-neutral-100 border-none"
+            placeholder={searchPlaceholder}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
         </div>
       )}
 
       {/* Чекбоксы */}
-      <div className="max-h-96 mb-3.5 pr-2 gap-3.5 flex flex-col overflow-auto scrollbar">
+      <div className="max-h-96 pr-2 gap-3.5 flex flex-col overflow-auto scrollbar">
         {list.map((item, index) => (
           <FilterCheckbox
+            id={id}
             key={index}
             text={item.text}
             value={item.value}
             extra={item.extra}
-            checked={false}
-            onCheckedChange={(ids) => console.log(ids)}
+            checked={values?.has(item.value)}
+            onCheckedChange={() => onChange?.(item.value)}
           />
         ))}
       </div>
 
       {/* Показать все */}
       {items.length > limit && (
-        <div className="border-t border-neutral-200">
+        <div className="mt-3.5 border-t border-neutral-200">
           <button
             className="mt-2.5 gap-1 flex items-center text-sm text-primary"
             onClick={() => setIsPopup(!isPopup)}
