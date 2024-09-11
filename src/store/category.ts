@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 
 interface ICategoryState {
-  category: number
-  setCategory: (category: number) => void
+  categoryId: number
+  setCategoryId: (value: number) => void
 }
 
 export const useCategoryStore = create<ICategoryState>((set) => ({
-  category: 0,
-  setCategory: (category: number) => set({ category }),
+  categoryId: 1,
+  setCategoryId: (categoryId: number) => set({ categoryId }),
 }))

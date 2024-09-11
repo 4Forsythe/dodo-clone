@@ -1,60 +1,59 @@
 'use client'
 
 import React from 'react'
+import { useRouter } from 'next/navigation'
+
+import qs from 'qs'
+import { cn } from '@/lib/utils'
+import { useFilters, useIngredients } from '@/hooks'
+import { PIZZA_SIZES, PIZZA_TYPES } from '@/constants/variants.constants'
 
 import { Input } from '@/components/ui'
-import { RangeSlider } from './range-slider'
-import { FilterCheckboxGroup } from './filter-checkbox-group'
-
-import { useIngredients } from '@/hooks/useIngredients'
-import { useSet } from 'react-use'
+import { RangeSlider, FilterCheckboxGroup } from '@/components/shared'
 
 interface IFilters {
   className?: string
 }
 
-interface IPricingRange {
-  from: number
-  to: number
-}
-
 export const Filters: React.FC<IFilters> = ({ className }) => {
-  const [types, { toggle: onToggleTypes }] = useSet(new Set<string>([]))
-  const [sizes, { toggle: onToggleSizes }] = useSet(new Set<string>([]))
+  const router = useRouter()
 
-  const [prices, setPrices] = React.useState<IPricingRange>({ from: 275, to: 1250 })
+  const { ingredients: ingredientsData } = useIngredients()
 
-  const { ingredients, values: ingredientIds, onToggle: onToggleIngredients } = useIngredients()
+  const { types, sizes, prices, ingredients, setTypes, setSizes, setPrices, setIngredients } =
+    useFilters()
 
-  const ingredientGroup = ingredients.map((item) => ({ text: item.name, value: String(item.id) }))
+  const formattedIngredients = ingredientsData.map((item) => ({
+    text: item.name,
+    value: String(item.id),
+  }))
 
-  const onPriceRange = (key: keyof IPricingRange, value: number) => {
-    setPrices({ ...prices, [key]: value })
+  const setPricesRange = (prices: number[]) => {
+    setPrices('from', prices[0])
+    setPrices('to', prices[1])
   }
 
   React.useEffect(() => {
-    console.log(types, sizes, prices, ingredientIds)
-  }, [types, sizes, prices, ingredientIds])
+    const params = {
+      types: Array.from(types),
+      sizes: Array.from(sizes),
+      ...prices,
+      ingredients: Array.from(ingredients),
+    }
+
+    router.push(`?${qs.stringify(params, { arrayFormat: 'comma' })}`, { scroll: false })
+  }, [types, sizes, prices, ingredients])
 
   return (
-    <div className={className}>
+    <div className={cn('my-6', className)}>
       {/* Типы теста */}
       <FilterCheckboxGroup
         id="types"
         className="py-4 flex flex-col"
         text="Тесто"
-        items={[
-          {
-            text: 'Тонкое',
-            value: '1',
-          },
-          {
-            text: 'Традиционное',
-            value: '2',
-          },
-        ]}
+        items={PIZZA_TYPES}
         values={types}
-        onChange={onToggleTypes}
+        onChange={setTypes}
       />
 
       {/* Размеры */}
@@ -62,22 +61,9 @@ export const Filters: React.FC<IFilters> = ({ className }) => {
         id="sizes"
         className="py-4 flex flex-col"
         text="Размеры"
-        items={[
-          {
-            text: '25 см',
-            value: '25',
-          },
-          {
-            text: '30 см',
-            value: '30',
-          },
-          {
-            text: '35 см',
-            value: '35',
-          },
-        ]}
+        items={PIZZA_SIZES}
         values={sizes}
-        onChange={onToggleSizes}
+        onChange={setSizes}
       />
 
       {/* Стоимость */}
@@ -90,7 +76,7 @@ export const Filters: React.FC<IFilters> = ({ className }) => {
             type="number"
             placeholder={`от ${prices.from} ₽`}
             value={String(prices.from)}
-            onChange={(e) => onPriceRange('from', Number(e.target.value))}
+            onChange={(e) => setPrices('from', Number(e.target.value))}
           />
           <Input
             min={275}
@@ -98,7 +84,7 @@ export const Filters: React.FC<IFilters> = ({ className }) => {
             type="number"
             placeholder={`до ${prices.to} ₽`}
             value={String(prices.to)}
-            onChange={(e) => onPriceRange('to', Number(e.target.value))}
+            onChange={(e) => setPrices('to', Number(e.target.value))}
           />
         </div>
         <RangeSlider
@@ -106,7 +92,7 @@ export const Filters: React.FC<IFilters> = ({ className }) => {
           max={1250}
           step={25}
           value={[prices.from, prices.to]}
-          onValueChange={([from, to]) => setPrices({ from, to })}
+          onValueChange={setPricesRange}
         />
       </div>
 
@@ -115,11 +101,11 @@ export const Filters: React.FC<IFilters> = ({ className }) => {
         id="ingredients"
         className="py-4 flex flex-col"
         text="Ингредиенты"
-        items={ingredientGroup}
-        shortItems={ingredientGroup}
+        items={formattedIngredients}
+        shortItems={formattedIngredients}
         searchPlaceholder="Найти ингредиенты..."
-        values={ingredientIds}
-        onChange={onToggleIngredients}
+        values={ingredients}
+        onChange={setIngredients}
       />
     </div>
   )

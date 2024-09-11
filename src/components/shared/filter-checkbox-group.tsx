@@ -41,7 +41,7 @@ export const FilterCheckboxGroup: React.FC<IFilterCheckboxGroup> = ({
     : (shortItems || items).slice(0, limit)
 
   return (
-    <div className={cn('py-6 pb-7 flex flex-col border-t border-neutral-200', className)}>
+    <div className={cn('py-6 pb-7 flex flex-col', className)}>
       <span className="mb-4 font-bold">{text}</span>
 
       {/* Расширенный поиск */}
