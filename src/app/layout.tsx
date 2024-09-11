@@ -1,7 +1,5 @@
 import { Nunito } from 'next/font/google'
 
-import { Header } from '@/components/shared'
-
 import './styles.css'
 
 const nunito = Nunito({
@@ -10,19 +8,17 @@ const nunito = Nunito({
   variable: '--font-nunito',
 })
 
-export default function RootLayout({
+export default function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
     <html lang="ru">
-      <body className={nunito.variable}>
-        <main className="min-h-screen">
-          <Header />
-          {children}
-        </main>
-      </body>
+      <head>
+        <link rel="icon" href="/icon.ico" />
+      </head>
+      <body className={nunito.variable}>{children}</body>
     </html>
   )
 }
