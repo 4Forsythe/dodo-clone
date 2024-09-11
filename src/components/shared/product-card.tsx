@@ -5,7 +5,9 @@ import Image from 'next/image'
 import { Plus } from 'lucide-react'
 
 import { Button } from '@/components/ui'
-import { Heading } from './heading'
+import { Heading } from '@/components/shared'
+
+import { route } from '@/config/routes.config'
 
 interface IProductCard {
   id: string
@@ -18,7 +20,7 @@ interface IProductCard {
 export const ProductCard: React.FC<IProductCard> = ({ id, name, price, imageUrl, className }) => {
   return (
     <div className={className}>
-      <Link href={`/product/${id}`}>
+      <Link href={`${route.PRODUCT}/${id}`}>
         {/* Картинка */}
         <div className="h-[260px] mb-3 p-6 flex items-center justify-center bg-neutral-50 rounded-xl overflow-hidden">
           <Image

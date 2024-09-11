@@ -8,6 +8,8 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { Container, SearchBar } from '@/components/shared'
 
+import { route } from '@/config/routes.config'
+
 interface IHeader {
   className?: string
 }
@@ -18,7 +20,7 @@ export const Header: React.FC<IHeader> = ({ className }) => {
       <Container className="pt-6 pb-4 flex items-center justify-between">
         {/* Логотип */}
         <div className="mr-10 flex flex-col">
-          <Link href="/" className="gap-2 flex items-center leading-[42px] overflow-hidden">
+          <Link href={route.HOME} className="gap-2 flex items-end leading-[42px] overflow-hidden">
             <Image width={45} height={45} src="/images/dodo-pizza.svg" alt="Logo" priority />
             <h1 className="text-[28px] font-black uppercase">Dodo Clone</h1>
           </Link>

@@ -11,6 +11,7 @@ import { Search, X, ArrowUpRight } from 'lucide-react'
 import { useClickAway, useDebounce } from 'react-use'
 
 import { api } from '@/services/api'
+import { route } from '@/config/routes.config'
 
 interface ISearchBar {
   className?: string
@@ -93,7 +94,7 @@ export const SearchBar: React.FC<ISearchBar> = ({ className }) => {
               {items.map((item) => (
                 <li key={item.id} className="w-full px-2.5 flex flex-1">
                   <Link
-                    href="/"
+                    href={`${route.PRODUCT}/${item.id}`}
                     className="px-3 py-2 flex items-center justify-between flex-1 rounded-2xl hover:bg-primary/10 transition duration-200"
                   >
                     <div className="gap-3.5 flex items-center">

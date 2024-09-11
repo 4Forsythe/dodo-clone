@@ -17,22 +17,22 @@ interface IProductGroup {
 }
 
 export const ProductGroup: React.FC<IProductGroup> = ({ title, items, categoryId, className }) => {
-  const { setCategory } = useCategoryStore()
+  const { setCategoryId } = useCategoryStore()
   const intersectionRef = React.useRef(null)
 
   const intersection = useIntersection(intersectionRef, {
-    threshold: 0.4,
+    threshold: 0.75,
+    rootMargin: '0px',
   })
 
   React.useEffect(() => {
     if (intersection?.isIntersecting) {
-      console.log('Новая категория:', categoryId)
-      setCategory(categoryId)
+      setCategoryId(categoryId)
     }
   }, [categoryId, intersection?.isIntersecting])
 
   return (
-    <section id={title} ref={intersectionRef} className="flex flex-col">
+    <section id={`category=${categoryId}`} ref={intersectionRef} className="flex flex-col">
       {/* Заголовок */}
       <Heading text={title} size="lg" />
 
