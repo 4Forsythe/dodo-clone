@@ -51,7 +51,8 @@ async function up() {
 
       const variants = Array.from({ length: 3 }, () => ({
         size: [25, 30, 35][faker.number.int({ min: 0, max: 2 })],
-        doughType: faker.number.int({ min: 1, max: 2 }),
+        type: faker.number.int({ min: 1, max: 2 }),
+        weight: faker.number.int({ min: 150, max: 930 }),
         price: faker.number.int({ min: 275, max: 1065 }),
         productId: id,
       }))
@@ -70,6 +71,7 @@ async function up() {
       })
 
       const variant = {
+        weight: faker.number.int({ min: 150, max: 930 }),
         price: faker.number.int({ min: 125, max: 485 }),
         productId: id,
       }
