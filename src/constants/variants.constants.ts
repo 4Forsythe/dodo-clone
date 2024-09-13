@@ -5,8 +5,8 @@ export const PIZZA_SIZES_MAP = {
 } as const
 
 export const PIZZA_TYPES_MAP = {
-  1: 'Тонкое',
-  2: 'Традиционное',
+  1: 'Традиционное',
+  2: 'Тонкое',
 } as const
 
 export type PizzaSizes = keyof typeof PIZZA_SIZES_MAP
