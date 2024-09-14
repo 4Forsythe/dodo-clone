@@ -1,5 +1,6 @@
 import type { Ingredient, ProductVariant } from '@prisma/client'
 import type { PizzaSizes, PizzaTypes } from '@/constants/variants.constants'
+import type { CartItemType } from '@/types'
 
 /**
  * Функция для подсчета общей стоимости продукта
@@ -27,4 +28,16 @@ export const calcProductTotal = (
     .reduce((sum, ingredient) => sum + ingredient.price, 0)
 
   return Number(basePrice) + doppingPrice
+}
+
+/**
+ * Функция для подсчета общей стоимости продукта в корзине, включая вариант продукта и выбранные ингредиенты
+ * @param item - продукт из корзины
+ * @returns общая стоимость продукта в корзине (number)
+ */
+
+export const calcCartItemTotal = (item: CartItemType): number => {
+  const doppingPrice = item.doppings.reduce((sum, dopping) => sum + dopping.price, 0)
+
+  return (item.variant.price + doppingPrice) * item.quantity
 }
