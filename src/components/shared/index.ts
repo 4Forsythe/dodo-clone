@@ -1,8 +1,13 @@
 export * from './forms'
 export * from './modals'
 
+export * from './drawer-item-details'
+
+export { CartButton } from './cart-button'
 export { Categories } from './categories'
 export { Container } from './container'
+export { DrawerItem } from './drawer-item'
+export { Drawer } from './drawer'
 export { FilterCheckboxGroup } from './filter-checkbox-group'
 export { FilterCheckbox } from './filter-checkbox'
 export { Filters } from './filters'

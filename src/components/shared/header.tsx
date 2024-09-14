@@ -3,10 +3,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 import { cn } from '@/lib/utils'
-import { ArrowRight } from 'lucide-react'
 
 import { Button } from '@/components/ui'
-import { Container, SearchBar } from '@/components/shared'
+import { CartButton, Container, SearchBar } from '@/components/shared'
 
 import { route } from '@/config/routes.config'
 
@@ -40,15 +39,7 @@ export const Header: React.FC<IHeader> = ({ className }) => {
           <Button variant="outline">
             <b>Войти</b>
           </Button>
-          <Button className="group relative">
-            <b>Корзина</b>
-            <span className="w-[1px] h-2/3 mx-2.5 bg-white/50" />
-            <b className="transition duration-300 group-hover:opacity-0">5</b>
-            <ArrowRight
-              size={18}
-              className="right-3.5 opacity-0 -translate-x-2 absolute transition duration-300 group-hover:opacity-100 group-hover:translate-x-0"
-            />
-          </Button>
+          <CartButton />
         </div>
       </Container>
     </header>
