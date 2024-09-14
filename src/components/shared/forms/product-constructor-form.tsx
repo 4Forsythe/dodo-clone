@@ -2,22 +2,14 @@
 
 import React from 'react'
 
-import { cn } from '@/lib/utils'
-import { useSet } from 'react-use'
+import { cn } from '@/lib'
+import { useProductOptions, useProductDetails } from '@/hooks'
 
 import { Button } from '@/components/ui'
 import { ProductPreview, VariantSelector, IngredientCard } from '@/components/shared'
 
-import {
-  PIZZA_SIZES,
-  PIZZA_TYPES,
-  PIZZA_TYPES_MAP,
-  type PizzaSizes,
-  type PizzaTypes,
-} from '@/constants/variants.constants'
-
 import type { ProductType } from '@/types/product.types'
-import type { Variant } from '@/components/shared/variant-selector'
+import type { PizzaSizes, PizzaTypes } from '@/constants/variants.constants'
 
 interface IProductConstructorForm {
   product: ProductType
@@ -30,74 +22,26 @@ export const ProductConstructorForm: React.FC<IProductConstructorForm> = ({
   className,
   onSubmit,
 }) => {
-  const [size, setSize] = React.useState<PizzaSizes>(30)
-  const [type, setType] = React.useState<PizzaTypes>(1)
+  const { name, description, imageUrl } = product
 
-  const { name, imageUrl, description } = product
+  const {
+    size,
+    type,
+    ingredients,
+    availableSizes,
+    availableTypes,
+    setSize,
+    setType,
+    onToggleIngredient,
+  } = useProductOptions(product.variants)
 
-  const isPizza = Boolean(product.variants[0].type)
-
-  const availableSizeVariants = product.variants.filter((variant) => variant.size === size)
-
-  const availableSizes: Variant[] = PIZZA_SIZES.map((size) => ({
-    text: size.text,
-    value: size.value,
-    disabled: !product.variants.some((variant) => variant.size === Number(size.value)),
-  }))
-
-  const availableTypes: Variant[] = PIZZA_TYPES.map((type) => ({
-    text: type.text,
-    value: type.value,
-    disabled: !availableSizeVariants.some((variant) => variant.type === Number(type.value)),
-  }))
-
-  React.useEffect(() => {
-    const isAvailableSize = availableSizes.find(
-      (item) => Number(item.value) === size && !item.disabled
-    )
-    const isAvailableType = availableTypes.find(
-      (item) => Number(item.value) === type && !item.disabled
-    )
-
-    const firstAvailableSize = availableSizes.find((item) => !item.disabled)
-    const firstAvailableType = availableTypes.find((item) => !item.disabled)
-
-    if (!isAvailableSize && firstAvailableSize) {
-      setSize(Number(firstAvailableSize.value) as PizzaSizes)
-    }
-    if (!isAvailableType && firstAvailableType) {
-      setType(Number(firstAvailableType.value) as PizzaTypes)
-    }
-  }, [size, type])
-
-  const [ingredients, { toggle: onToggleIngredient }] = useSet(new Set<number>([]))
-
-  const calcPizzaPrice = () => {
-    const basePrice = product.variants.find(
-      (variant) => variant.size === size && variant.type === type
-    )?.price
-
-    const doppingPrice = product.ingredients
-      .filter((ingredient) => ingredients.has(ingredient.id))
-      .reduce((sum, ingredient) => sum + ingredient.price, 0)
-
-    return Number(basePrice) + doppingPrice
-  }
-
-  const calcProductPrice = () => {
-    return product.variants.find((variant) => variant.size === size)?.price
-  }
-
-  const calcProductWeight = () => {
-    return product.variants.find((variant) => variant.size === size && variant.type === type)
-      ?.weight
-  }
-
-  const details = isPizza
-    ? `${size} см, ${PIZZA_TYPES_MAP[type].toLowerCase()} тесто, ${calcProductWeight()} г`
-    : `${calcProductWeight()} г`
-
-  const total = isPizza ? calcPizzaPrice() : calcProductPrice()
+  const { details, total } = useProductDetails(
+    size,
+    type,
+    product.variants,
+    product.ingredients,
+    ingredients
+  )
 
   return (
     <div className={cn('flex flex-1 overflow-hidden', className)}>
