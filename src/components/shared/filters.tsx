@@ -1,11 +1,9 @@
 'use client'
 
 import React from 'react'
-import { useRouter } from 'next/navigation'
 
-import qs from 'qs'
 import { cn } from '@/lib/utils'
-import { useFilters, useIngredients } from '@/hooks'
+import { useFilters, useIngredients, useUpdateFilters } from '@/hooks'
 import { PIZZA_SIZES, PIZZA_TYPES } from '@/constants/variants.constants'
 
 import { Input } from '@/components/ui'
@@ -16,12 +14,11 @@ interface IFilters {
 }
 
 export const Filters: React.FC<IFilters> = ({ className }) => {
-  const router = useRouter()
-
+  const filters = useFilters()
   const { ingredients: ingredientsData } = useIngredients()
 
   const { types, sizes, prices, ingredients, setTypes, setSizes, setPrices, setIngredients } =
-    useFilters()
+    filters
 
   const formattedIngredients = ingredientsData.map((item) => ({
     text: item.name,
@@ -33,19 +30,19 @@ export const Filters: React.FC<IFilters> = ({ className }) => {
     setPrices('to', prices[1])
   }
 
-  React.useEffect(() => {
-    const params = {
-      types: Array.from(types),
-      sizes: Array.from(sizes),
-      ...prices,
-      ingredients: Array.from(ingredients),
-    }
-
-    router.push(`?${qs.stringify(params, { arrayFormat: 'comma' })}`, { scroll: false })
-  }, [types, sizes, prices, ingredients])
+  useUpdateFilters(filters)
 
   return (
     <div className={cn('my-6', className)}>
+      {/* Размеры */}
+      <FilterCheckboxGroup
+        id="sizes"
+        className="py-4 flex flex-col"
+        text="Размеры"
+        items={PIZZA_SIZES}
+        values={sizes}
+        onChange={setSizes}
+      />
       {/* Типы теста */}
       <FilterCheckboxGroup
         id="types"
@@ -56,20 +53,10 @@ export const Filters: React.FC<IFilters> = ({ className }) => {
         onChange={setTypes}
       />
 
-      {/* Размеры */}
-      <FilterCheckboxGroup
-        id="sizes"
-        className="py-4 flex flex-col"
-        text="Размеры"
-        items={PIZZA_SIZES}
-        values={sizes}
-        onChange={setSizes}
-      />
-
       {/* Стоимость */}
       <div className="py-4 flex flex-col border-t border-neutral-200">
         <span className="mb-4 font-bold">Стоимость</span>
-        <div className="mb-4 gap-2.5 flex items-center">
+        <div className="mb-5 gap-2.5 flex items-center">
           <Input
             min={275}
             max={1250}
