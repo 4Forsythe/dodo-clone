@@ -1,3 +1,5 @@
+import { Providers } from './providers'
+
 import { Nunito } from 'next/font/google'
 
 import './styles.css'
@@ -18,7 +20,9 @@ export default function AppLayout({
       <head>
         <link rel="icon" href="/icon.ico" />
       </head>
-      <body className={nunito.variable}>{children}</body>
+      <body className={`${nunito.variable} scrollbar`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }
