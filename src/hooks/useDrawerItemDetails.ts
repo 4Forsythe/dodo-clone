@@ -4,12 +4,12 @@ import { PIZZA_TYPES_MAP, type PizzaTypes } from '@/constants/variants.constants
 
 interface IUseDrawerItemDetailsResponse {
   details: string
-  doppings: string
+  doppings?: string
 }
 
 export const useDrawerItemDetails = (
-  size: number | null,
-  type: number | null | undefined,
+  size: number,
+  type: number | undefined,
   weight: number,
   ingredients: CartItemState['ingredients']
 ): IUseDrawerItemDetailsResponse => {
@@ -33,6 +33,6 @@ export const useDrawerItemDetails = (
 
   return {
     details: details.join(', ').toLowerCase(),
-    doppings: `+ ${doppings.join(', ').toLowerCase()}`,
+    doppings: doppings.length > 0 ? `+ ${doppings.join(', ').toLowerCase()}` : undefined,
   }
 }

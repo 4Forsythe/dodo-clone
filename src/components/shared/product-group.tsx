@@ -4,14 +4,15 @@ import React from 'react'
 
 import { cn } from '@/lib/utils'
 import { useIntersection } from 'react-use'
-
-import { Heading } from './heading'
-import { ProductCard } from './product-card'
 import { useCategoryStore } from '@/store/category'
+
+import { Heading, ProductCard } from '@/components/shared'
+
+import type { ProductType } from '@/types'
 
 interface IProductGroup {
   title: string
-  items: any[]
+  items: ProductType[]
   categoryId: number
   className?: string
 }
@@ -39,7 +40,7 @@ export const ProductGroup: React.FC<IProductGroup> = ({ title, items, categoryId
       {/* Список товаров */}
       <div className={cn('gap-[50px] grid grid-cols-3', className)}>
         {items.map((item) => (
-          <ProductCard key={item.id} {...item} />
+          <ProductCard key={item.id} price={item.variants[0].price} {...item} />
         ))}
       </div>
     </section>

@@ -1,1 +1,1 @@
-export { ProductConstructor } from './product-constructor'
+export { ProductConstructorModal } from './product-constructor-modal'

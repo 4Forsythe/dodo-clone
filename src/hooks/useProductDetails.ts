@@ -14,19 +14,21 @@ import { PIZZA_TYPES_MAP, type PizzaSizes, type PizzaTypes } from '@/constants/v
  */
 
 export const useProductDetails = (
-  size: PizzaSizes,
-  type: PizzaTypes,
+  size: PizzaSizes | number,
+  type: PizzaTypes | null,
   variants: ProductVariant[],
   ingredients: Ingredient[],
   doppings: Set<number>
 ) => {
-  const isPizza = Boolean(variants[0].type)
+  const isPizza = type
 
-  const weight = variants.find((variant) => variant.size === size && variant.type === type)?.weight
+  const weight = isPizza
+    ? variants.find((variant) => variant.size === size && variant.type === type)?.weight
+    : variants.find((variant) => variant.size === size)?.weight
 
   const details = isPizza
     ? `${size} см, ${PIZZA_TYPES_MAP[type].toLowerCase()} тесто, ${weight} г`
-    : `${weight} г`
+    : `${size} шт, ${weight} г`
 
   const total = calcProductTotal(size, type, variants, ingredients, doppings)
 

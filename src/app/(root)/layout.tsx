@@ -1,4 +1,4 @@
-import { Header } from '@/components/shared'
+import { Header, Footer } from '@/components/shared'
 
 export default function RootLayout({
   modal,
@@ -8,10 +8,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen flex flex-col">
       <Header />
       {modal}
-      {children}
+      <div className="flex-1">{children}</div>
+      <Footer />
     </main>
   )
 }

@@ -1,1 +1,2 @@
-export { ProductConstructorForm } from './product-constructor-form'
+export { ProductForm } from './product-form'
+export { ProductModalForm } from './product-modal-form'

@@ -1,18 +1,11 @@
-import { prisma } from '@/prisma/prisma-client'
-
 import { Container, Filters, ProductGroup, TopBar } from '@/components/shared'
 
-export default async function Root() {
-  const categories = await prisma.category.findMany({
-    include: {
-      products: {
-        include: {
-          variants: true,
-          ingredients: true,
-        },
-      },
-    },
-  })
+import { getProducts } from '@/lib'
+
+import type { IProductParams } from '@/types'
+
+export default async function RootPage({ searchParams }: { searchParams: IProductParams }) {
+  const categories = await getProducts(searchParams)
 
   return (
     <>

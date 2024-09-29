@@ -4,11 +4,17 @@ import Image, { type ImageProps } from 'next/image'
 import { cn } from '@/lib/utils'
 
 interface IProductPreview extends ImageProps {
-  size: number | null
+  size?: number
   className?: string
 }
 
-export const ProductPreview: React.FC<IProductPreview> = ({ size, className, ...rest }) => {
+export const ProductPreview: React.FC<IProductPreview> = ({
+  width,
+  height,
+  size,
+  className,
+  ...rest
+}) => {
   return (
     <div
       className={cn(
@@ -22,8 +28,8 @@ export const ProductPreview: React.FC<IProductPreview> = ({ size, className, ...
           'w-[23rem] h-[23rem]': size === 30,
           'w-[29rem] h-[29rem]': size === 35,
         })}
-        width={350}
-        height={350}
+        width={width || 350}
+        height={height || 350}
         priority
         {...rest}
       />

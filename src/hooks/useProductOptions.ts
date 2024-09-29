@@ -10,8 +10,9 @@ import type { ProductVariant } from '@prisma/client'
 import type { PizzaSizes, PizzaTypes } from '@/constants/variants.constants'
 
 interface IProductVariantResponse {
-  size: PizzaSizes
-  type: PizzaTypes
+  size: PizzaSizes | number
+  type: PizzaTypes | null
+  variantId?: number
   ingredients: Set<number>
   availableSizes: Variant[]
   availableTypes: Variant[]
@@ -27,10 +28,19 @@ interface IProductVariantResponse {
  */
 
 export const useProductOptions = (variants: ProductVariant[]): IProductVariantResponse => {
-  const [size, setSize] = React.useState<PizzaSizes>(30)
-  const [type, setType] = React.useState<PizzaTypes>(1)
+  const isPizza = variants[0].type
+
+  const minSize = variants.reduce(
+    (prev, variant) => (variant.size < prev ? variant.size : prev),
+    variants[0].size
+  )
+
+  const [size, setSize] = React.useState<PizzaSizes | number>(isPizza ? 30 : minSize)
+  const [type, setType] = React.useState<PizzaTypes | null>(isPizza ? 1 : null)
+
   const [ingredients, { toggle: onToggleIngredient }] = useSet(new Set<number>([]))
 
+  const variantId = variants.find((item) => item.size === size && item.type === type)?.id
   const availableSizeVariants = variants.filter((variant) => variant.size === size)
 
   const availableSizes: Variant[] = PIZZA_SIZES.map((size) => ({
@@ -67,6 +77,7 @@ export const useProductOptions = (variants: ProductVariant[]): IProductVariantRe
   return {
     size,
     type,
+    variantId,
     ingredients,
     availableSizes,
     availableTypes,
