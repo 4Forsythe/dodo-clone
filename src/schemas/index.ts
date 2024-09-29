@@ -1,0 +1,1 @@
+export { checkoutSchema } from './checkout'
