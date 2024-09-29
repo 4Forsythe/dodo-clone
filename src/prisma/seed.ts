@@ -71,6 +71,7 @@ async function up() {
       })
 
       const variant = {
+        size: faker.number.int({ min: 1, max: 4 }),
         weight: faker.number.int({ min: 150, max: 930 }),
         price: faker.number.int({ min: 125, max: 485 }),
         productId: id,

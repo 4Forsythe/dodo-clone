@@ -1,9 +1,9 @@
 import { prisma } from '@/prisma/prisma-client'
 
+import type { CartItemType } from '@/types'
 import type { Cart, Ingredient, ProductVariant } from '@prisma/client'
 
-import type { CartItemType } from '@/types'
-import type { PizzaSizes, PizzaTypes } from '@/constants/variants.constants'
+import { type PizzaSizes, type PizzaTypes, MIN_DELIVERY_PRICE } from '@/constants'
 
 /**
  * Функция для подсчета общей стоимости продукта
@@ -16,8 +16,8 @@ import type { PizzaSizes, PizzaTypes } from '@/constants/variants.constants'
  */
 
 export const calcProductTotal = (
-  size: PizzaSizes,
-  type: PizzaTypes,
+  size: PizzaSizes | number,
+  type: PizzaTypes | null,
   variants: ProductVariant[],
   ingredients: Ingredient[],
   doppings: Set<number>
@@ -43,6 +43,25 @@ export const calcCartItemTotal = (item: CartItemType): number => {
   const doppingPrice = item.doppings.reduce((sum, dopping) => sum + dopping.price, 0)
 
   return (item.variant.price + doppingPrice) * item.quantity
+}
+
+/**
+ * Функция для подсчета итоговой стоимости корзины с продуктами
+ * @param amount - общая стоимость всех продуктов в корзине
+ * @param discount - общая скидка по акциям (в процентах)
+ * @returns стоимость доставки (number); суммарная скидка (number); итоговая стоимость корзины (number)
+ */
+
+export const calcCartTotal = (
+  amount: number,
+  discount?: number
+): { deliveryPrice: number; discountPrice: number; totalPrice: number } => {
+  const deliveryPrice = MIN_DELIVERY_PRICE > amount ? MIN_DELIVERY_PRICE - amount : 0
+  const discountPrice = discount ? (discount / 100) * amount : 0
+
+  const totalPrice = amount + deliveryPrice - discountPrice
+
+  return { deliveryPrice, discountPrice, totalPrice }
 }
 
 /**
