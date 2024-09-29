@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 
+import { toast } from 'sonner'
+
 import { api } from '@/services/api'
 import { mapCartItems } from '@/lib/map-cart-items'
 
@@ -8,8 +10,8 @@ import type { ICreateCartItem } from '@/types'
 export type CartItemState = {
   id: string
   name: string
-  size: number | null
-  type?: number | null
+  size: number
+  type?: number
   weight: number
   imageUrl: string
   price: number
@@ -17,22 +19,25 @@ export type CartItemState = {
   ingredients: Array<{ name: string; price: number }>
 }
 
-interface ICartState {
+export interface ICartState {
   amount: number
   items: CartItemState[]
   isLoading: boolean
+  isPending: boolean
   isError: boolean
   getCart: () => Promise<void>
-  createCartItem: (dto: ICreateCartItem) => Promise<void>
+  createCartItem: (dto: ICreateCartItem, onSuccess?: VoidFunction) => Promise<void>
   updateCartItem: (id: string, dto: { quantity: number }) => Promise<void>
   deleteCartItem: (id: string) => Promise<void>
 }
 
-export const useCartStore = create<ICartState>((set, get) => ({
+export const useCartStore = create<ICartState>((set) => ({
   amount: 0,
   items: [],
   isLoading: true,
+  isPending: false,
   isError: false,
+
   getCart: async () => {
     try {
       set({ isLoading: true, isError: false })
@@ -43,29 +48,37 @@ export const useCartStore = create<ICartState>((set, get) => ({
       set({ amount, items })
     } catch (error) {
       set({ isError: true })
-      console.error('useCartStore(): getCart()', error)
+      console.error('useCartStore: getCart()', error)
     } finally {
       set({ isLoading: false })
     }
   },
-  createCartItem: async (dto: ICreateCartItem) => {
+
+  createCartItem: async (dto: ICreateCartItem, onSuccess?: VoidFunction) => {
     try {
-      set({ isLoading: true, isError: false })
+      set({ isPending: true, isError: false })
 
       const data = await api.carts.create(dto)
+      const product = data.items.find((item) => item.variantId === dto.variantId)
+
       const { amount, items } = mapCartItems(data)
 
       set({ amount, items })
+      toast.success(`${product?.variant.product.name} теперь в вашей корзине!`)
+
+      onSuccess && onSuccess()
     } catch (error) {
       set({ isError: true })
-      console.error('useCartStore(): createCartItem()', error)
+      toast.error('Упс! Что-то пошло не так!')
+      console.error('useCartStore: createCartItem()', error)
     } finally {
-      set({ isLoading: false })
+      set({ isPending: false })
     }
   },
+
   updateCartItem: async (id: string, dto: { quantity: number }) => {
     try {
-      set({ isLoading: true, isError: false })
+      set({ isPending: true, isError: false })
 
       const data = await api.carts.update(id, dto)
       const { amount, items } = mapCartItems(data)
@@ -73,14 +86,15 @@ export const useCartStore = create<ICartState>((set, get) => ({
       set({ amount, items })
     } catch (error) {
       set({ isError: true })
-      console.error('useCartStore(): updateCartItem()', error)
+      console.error('useCartStore: updateCartItem()', error)
     } finally {
-      set({ isLoading: false })
+      set({ isPending: false })
     }
   },
+
   deleteCartItem: async (id: string) => {
     try {
-      set({ isLoading: true, isError: false })
+      set({ isPending: true, isError: false })
 
       const data = await api.carts.remove(id)
       const { amount, items } = mapCartItems(data)
@@ -88,9 +102,9 @@ export const useCartStore = create<ICartState>((set, get) => ({
       set({ amount, items })
     } catch (error) {
       set({ isError: true })
-      console.error('useCartStore(): deleteCartItem()', error)
+      console.error('useCartStore: deleteCartItem()', error)
     } finally {
-      set({ isLoading: false })
+      set({ isPending: false })
     }
   },
 }))
