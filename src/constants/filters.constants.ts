@@ -1,2 +1,2 @@
-export const minPrice = 275
-export const maxPrice = 1250
+export const DEFAULT_PRICE_FROM = 275
+export const DEFAULT_PRICE_TO = 1250
