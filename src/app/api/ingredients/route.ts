@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(data)
   } catch (error) {
-    console.error('api/ingredients GET()', error)
+    console.error('api/ingredients: GET()', error)
     return NextResponse.json(
       { error: 'Internal error', message: 'Internal server error' },
       { status: 500 }

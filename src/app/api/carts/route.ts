@@ -23,24 +23,23 @@ export async function POST(request: NextRequest) {
 
     const item = await prisma.cartItem.findFirst({
       where: {
-        AND: {
-          cartId: cart.id,
-          variantId: body.variantId,
-          doppings: { every: { id: { in: body.doppings } } },
+        cartId: cart.id,
+        variantId: body.variantId,
+        doppings: {
+          every: { id: { in: body.doppings } },
         },
       },
+      include: { doppings: true },
     })
 
-    console.log(Boolean(item))
-
-    if (item) {
+    if (item && item.doppings.length === body.doppings?.length) {
       await prisma.cartItem.update({
         where: { id: item.id },
         data: { quantity: ++item.quantity },
       })
     }
 
-    if (!item) {
+    if (!item || item.doppings.length !== body.doppings?.length) {
       await prisma.cartItem.create({
         data: {
           cartId: cart.id,
@@ -57,7 +56,7 @@ export async function POST(request: NextRequest) {
 
     return response
   } catch (error) {
-    console.error('api/carts POST()', error)
+    console.error('api/carts: POST()', error)
     return NextResponse.json(
       { error: 'Internal error', message: 'Internal server error' },
       { status: 500 }
@@ -86,7 +85,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(cart)
   } catch (error) {
-    console.error('api/carts GET()', error)
+    console.error('api/carts: GET()', error)
     return NextResponse.json(
       { error: 'Internal error', message: 'Internal server error' },
       { status: 500 }

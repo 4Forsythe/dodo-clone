@@ -53,7 +53,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     return NextResponse.json(cart)
   } catch (error) {
-    console.error('api/carts PATCH()', error)
+    console.error('api/carts: PATCH()', error)
     return NextResponse.json(
       { error: 'Internal error', message: 'Internal server error' },
       { status: 500 }
@@ -90,7 +90,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     return NextResponse.json(cart)
   } catch (error) {
-    console.error('api/carts DELETE()', error)
+    console.error('api/carts: DELETE()', error)
     return NextResponse.json(
       { error: 'Internal error', message: 'Internal server error' },
       { status: 500 }
