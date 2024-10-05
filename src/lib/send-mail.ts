@@ -3,13 +3,14 @@
 import * as fs from 'fs'
 import * as handlebars from 'handlebars'
 
-import { transporter } from '@/config'
+import { transporter } from '@/config/nodemailer.config'
 
 const SENDER_EMAIL = String(process.env.SMTP_EMAIL)
 
 interface IReplacements {
   amount?: string
   orderId?: string
+  code?: string
   customerName?: string
   customerEmail?: string
   customerPhone?: string
@@ -36,12 +37,13 @@ export const sendMail = async (options: ISendMailOptions) => {
       if (source) {
         const template = handlebars.compile(source)
 
-        const { amount, orderId, customerName, customerEmail, customerPhone, returnUrl } =
+        const { amount, orderId, code, customerName, customerEmail, customerPhone, returnUrl } =
           options.html.replacements
 
         const replacements: IReplacements = {
           amount,
           orderId,
+          code,
           customerName,
           customerEmail,
           customerPhone,
