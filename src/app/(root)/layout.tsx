@@ -11,7 +11,7 @@ export default function RootLayout({
     <main className="min-h-screen flex flex-col">
       <Header />
       {modal}
-      <div className="flex-1">{children}</div>
+      <div className="flex flex-1 flex-col">{children}</div>
       <Footer />
     </main>
   )
