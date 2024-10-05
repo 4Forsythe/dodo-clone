@@ -13,7 +13,7 @@ export interface IProductParams {
   to?: string
   ingredients?: string
   sortBy?: string
-  limit?: string
-  offset?: string
-  page?: string
+  limit?: number
+  offset?: number
+  page?: number
 }

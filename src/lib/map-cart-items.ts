@@ -14,7 +14,9 @@ interface IMapCartItemsResponse {
  * @returns общая стоимость корзины (number); список продуктов (CartItemState[])
  */
 
-export const mapCartItems = (data: ICartResponse): IMapCartItemsResponse => {
+export const mapCartItems = (data: ICartResponse | null): IMapCartItemsResponse => {
+  if (!data) return { amount: 0, items: [] }
+
   const items = data.items.map((item) => ({
     id: item.id,
     name: item.variant.product.name,

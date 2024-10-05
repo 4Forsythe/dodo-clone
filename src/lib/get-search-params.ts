@@ -8,6 +8,13 @@ interface IGetSearchParamsOptions {
 
 type GetSearchParamsResponse = string | string[] | undefined | []
 
+/**
+ * Функция для получения значений параметров поиска
+ * @param key - ключ параметра
+ * @param options - опции: split - вернет массив из строковых значений параметра вместо обычной строки
+ * @returns строка значений параметра, массив строк, неизвестное или пустой массив (string | string[] | undefined | [])
+ */
+
 export const getSearchParams = (
   key: string,
   options?: IGetSearchParamsOptions
