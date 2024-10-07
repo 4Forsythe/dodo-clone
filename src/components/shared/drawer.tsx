@@ -1,11 +1,12 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 import { cn, declineNoun } from '@/lib'
 import { ChevronRight } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 
 import {
   Sheet,
@@ -21,16 +22,31 @@ import { Heading, DrawerItem } from '@/components/shared'
 import { route } from '@/config/routes.config'
 
 import { MIN_DELIVERY_PRICE } from '@/constants'
-import { useCart, useDrawerItemDetails } from '@/hooks'
+import { useAuthModal, useCart, useDrawerItemDetails } from '@/hooks'
 
 interface IDrawer {
   className?: string
 }
 
 export const Drawer: React.FC<React.PropsWithChildren<IDrawer>> = ({ children, className }) => {
+  const router = useRouter()
+
   const [isRedirecting, setIsRedirecting] = React.useState(false)
 
+  const { onOpen } = useAuthModal()
+  const { data: session, status } = useSession()
   const { amount, items, isLoading, isPending, updateCartItem, deleteCartItem } = useCart()
+
+  const onSubmit = () => {
+    if (status !== 'loading') {
+      if (session?.user) {
+        setIsRedirecting(true)
+        router.push(route.CHECKOUT)
+      } else {
+        onOpen()
+      }
+    }
+  }
 
   const onUpdate = (id: string, dto: { quantity: number }, type: 'increment' | 'decrement') => {
     if (!isPending) {
@@ -129,16 +145,14 @@ export const Drawer: React.FC<React.PropsWithChildren<IDrawer>> = ({ children, c
                 <span className="font-bold">{amount} ₽</span>
               </div>
 
-              <Link href={route.CHECKOUT}>
-                <Button
-                  className="w-full h-12 pr-12 text-base font-semibold flex items-center relative"
-                  size="lg"
-                  isLoading={isRedirecting}
-                  onClick={() => setIsRedirecting(true)}
-                >
-                  К оформлению заказа <ChevronRight className="right-5 absolute" size={20} />
-                </Button>
-              </Link>
+              <Button
+                className="w-full h-12 pr-12 text-base font-semibold flex items-center relative"
+                size="lg"
+                isLoading={isRedirecting}
+                onClick={onSubmit}
+              >
+                К оформлению заказа <ChevronRight className="right-5 absolute" size={20} />
+              </Button>
             </div>
           </SheetFooter>
         )}

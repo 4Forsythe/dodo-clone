@@ -1,13 +1,13 @@
+'use client'
+
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
-import { cn } from '@/lib/utils'
-
-import { Button } from '@/components/ui'
-import { CartButton, Container, SearchBar } from '@/components/shared'
-
+import { cn } from '@/lib'
 import { route } from '@/config/routes.config'
+
+import { CartButton, Container, LogInButton, SearchBar } from '@/components/shared'
 
 interface IHeader {
   hasSearch?: boolean
@@ -40,9 +40,7 @@ export const Header: React.FC<IHeader> = ({ hasSearch = true, hasCart = true, cl
 
         {/* Взаимодействие */}
         <div className="gap-3 flex items-center">
-          <Button variant={hasCart ? 'outline' : 'default'}>
-            <b>Войти</b>
-          </Button>
+          <LogInButton hasCart={hasCart} />
           {hasCart && <CartButton />}
         </div>
       </Container>

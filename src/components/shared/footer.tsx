@@ -1,11 +1,13 @@
 import React from 'react'
 import Link from 'next/link'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib'
 
 import { Container } from '@/components/shared'
 
 interface IFooter {
+  hasSearch?: boolean
+  hasCart?: boolean
   className?: string
 }
 
@@ -17,25 +19,37 @@ export const Footer: React.FC<IFooter> = ({ className }) => {
           <div className="grid flex-1 grid-cols-4">
             <div className="space-y-1 flex flex-col">
               <span className="mb-1 text-[17px] font-bold uppercase">Dodo Clone</span>
-              <Link className="font-semibold text-neutral-400 transition duration-200 hover:text-white">
+              <Link
+                href="/"
+                className="font-semibold text-neutral-400 transition duration-200 hover:text-white"
+              >
                 О нас
               </Link>
             </div>
             <div className="space-y-1 flex flex-col">
               <span className="mb-1 text-[17px] font-bold">Связь</span>
-              <Link className="font-semibold text-neutral-400 transition duration-200 hover:text-white">
+              <Link
+                href="/"
+                className="font-semibold text-neutral-400 transition duration-200 hover:text-white"
+              >
                 Чат
               </Link>
             </div>
             <div className="space-y-1 flex flex-col">
               <span className="mb-1 text-[17px] font-bold">Поддержка</span>
-              <Link className="font-semibold text-neutral-400 transition duration-200 hover:text-white">
+              <Link
+                href="/"
+                className="font-semibold text-neutral-400 transition duration-200 hover:text-white"
+              >
                 Купить мне кофе
               </Link>
             </div>
           </div>
           <div className="flex flex-col items-end justify-end">
-            <Link className="text-[17px] font-semibold text-neutral-400 transition duration-200 hover:text-white">
+            <Link
+              href="/"
+              className="text-[17px] font-semibold text-neutral-400 transition duration-200 hover:text-white"
+            >
               forsythe.dev@gmail.com
             </Link>
           </div>
@@ -47,7 +61,10 @@ export const Footer: React.FC<IFooter> = ({ className }) => {
               @ {new Date().getFullYear()}
             </span>
           </div>
-          <Link className="w-8 h-8 p-1.5 inline-flex items-center justify-center text-neutral-300/80 bg-[#c4c4c440] rounded transition duration-200 hover:bg-neutral-500/90">
+          <Link
+            href="/"
+            className="w-8 h-8 p-1.5 inline-flex items-center justify-center text-neutral-300/80 bg-[#c4c4c440] rounded transition duration-200 hover:bg-neutral-500/90"
+          >
             <svg
               width={24}
               height={24}

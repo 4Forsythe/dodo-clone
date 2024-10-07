@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib'
 import { useFilters, useIngredients, useUpdateFilters } from '@/hooks'
 import { PIZZA_SIZES, PIZZA_TYPES } from '@/constants/variants.constants'
 

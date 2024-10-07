@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 import type { Product } from '@prisma/client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib'
 import { Search, X, ArrowUpRight } from 'lucide-react'
 import { useClickAway, useDebounce } from 'react-use'
 
