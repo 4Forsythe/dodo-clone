@@ -9,3 +9,9 @@ export const getProfile = async (): Promise<User> => {
 
   return data
 }
+
+export const activate = async (params: { user: string; code: string }): Promise<void> => {
+  const { data } = await instance.get<void>(`${ENDPOINT}/activate`, { params })
+
+  return data
+}
