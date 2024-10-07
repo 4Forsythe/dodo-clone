@@ -1,4 +1,7 @@
+export { birthdaySchema } from './birthday'
 export { checkoutSchema } from './checkout'
 export { logInSchema } from './log-in'
 export { passwordSchema } from './password'
+export { profileSchema } from './profile'
 export { registerSchema } from './register'
+export { verifySchema } from './verify'

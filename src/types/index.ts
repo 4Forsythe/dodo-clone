@@ -1,3 +1,5 @@
+export type * from './auth.types'
 export type * from './cart.types'
 export type * from './order.types'
 export type * from './product.types'
+export type * from './profile.types'
