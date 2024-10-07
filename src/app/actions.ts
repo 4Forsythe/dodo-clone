@@ -1,5 +1,6 @@
 'use server'
 
+import { hashSync } from 'bcrypt'
 import { cookies } from 'next/headers'
 
 import { prisma } from '@/prisma/prisma-client'
@@ -9,16 +10,95 @@ import { sendMail } from '@/lib/send-mail'
 import { getUserSession } from '@/lib/get-user-session'
 import { CART_TOKEN } from '@/constants'
 
+import type { Prisma } from '@prisma/client'
 import type { ICreateOrder } from '@/types'
+
+export async function updateUser(dto: Prisma.UserUpdateInput) {
+  try {
+    const user = await getUserSession()
+
+    if (!user) throw new Error('Current user is not found')
+
+    const data = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: {
+        name: true,
+        email: true,
+        phone: true,
+        birthday: true,
+      },
+    })
+
+    if (JSON.stringify(data) !== JSON.stringify(dto)) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          name: dto.name,
+          email: dto.email,
+          phone: dto.phone,
+          birthday: dto.birthday,
+          password: dto.password && hashSync(dto.password as string, 12),
+        },
+      })
+    }
+  } catch (error) {
+    console.error('actions: updateUser()', error)
+  }
+}
+
+export async function registerUser(dto: Prisma.UserCreateInput) {
+  try {
+    const isExistingUser = await prisma.user.findFirst({
+      where: { email: dto.email },
+    })
+
+    if (isExistingUser) {
+      if (!isExistingUser.activatedAt) throw new Error('User email is not activated')
+
+      throw new Error('User is already exist')
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        email: dto.email,
+        password: hashSync(dto.password as string, 12),
+      },
+    })
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString()
+
+    await prisma.activationCode.create({
+      data: {
+        code,
+        userId: user.id,
+      },
+    })
+
+    await sendMail({
+      to: user.email,
+      subject: 'Подтвердите свой E-mail',
+      html: {
+        path: 'src/templates/confirm-email.template.html',
+        replacements: {
+          code,
+          returnUrl: `${process.env.NEXT_PUBLIC_API_URL}/auth/activate?user=${user.id}&code=${code}`,
+        },
+      },
+    })
+  } catch (error) {
+    console.error('actions: registerUser()', error)
+  }
+}
 
 export async function createOrder(dto: ICreateOrder) {
   try {
     const user = await getUserSession()
-    const token = cookies().get(CART_TOKEN)?.value
 
     if (!user) {
       throw new Error('Current user is not found')
     }
+
+    const token = cookies().get(CART_TOKEN)?.value
 
     const cart = await prisma.cart.findFirst({
       where: { OR: [{ id: user.id }, { token }] },
