@@ -16,12 +16,13 @@ enum UserRole {
 model User {
   id              String           @id   @default(uuid())
 
-  name            String
-  email           String            @unique
-  password        String
+  name            String?
+  email           String           @unique
+  phone           String?
+  password        String?
   birthday        DateTime?
-  role            UserRole          @default(USER)
-  isActive        Boolean           @default(false)
+  role            UserRole         @default(USER)
+  activatedAt     DateTime?
   provider        String?
   providerId      String?
 
@@ -103,7 +104,6 @@ model Order {
   address         String
   comment         String?
   status          OrderStatus       @default(PENDING)
-  token           String
   paymentId       String?
   userId          String?
 

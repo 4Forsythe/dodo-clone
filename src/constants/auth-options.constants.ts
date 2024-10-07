@@ -47,7 +47,7 @@ export const authOptions: AuthOptions = {
           where: { email: credentials.email },
         })
 
-        if (!user || !user.activatedAt || !user.password) return null
+        if (!user || !user.password) return null
 
         const isValidPassword = await compare(credentials.password, user.password)
 
@@ -57,6 +57,7 @@ export const authOptions: AuthOptions = {
           id: user.id,
           name: user.name,
           email: user.email,
+          phone: user.phone,
           birthday: user.birthday,
           role: user.role,
         }
@@ -103,6 +104,7 @@ export const authOptions: AuthOptions = {
           data: {
             name: user.name,
             email: user.email,
+            phone: user.phone,
             birthday: user.birthday,
             activatedAt: new Date(),
             provider: account?.provider,
@@ -127,6 +129,7 @@ export const authOptions: AuthOptions = {
         token.id = user.id
         token.name = user.name
         token.email = user.email
+        token.phone = user.phone
         token.birthday = user.birthday
         token.role = user.role
       }
