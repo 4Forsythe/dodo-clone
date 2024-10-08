@@ -10,17 +10,19 @@ import { useForm, FormProvider, type SubmitHandler } from 'react-hook-form'
 
 import { Button } from '@/components/ui'
 import { FormField, Heading } from '@/components/shared'
+import { AuthMethods } from '@/components/shared/modals/auth-modal'
+
+import { useAuthModal } from '@/hooks'
 import { logInSchema } from '@/schemas'
 
 import type { LogInFormType } from '@/types/auth.types'
 
 interface IAuthLogInForm {
   className?: string
-  onSwitch: () => void
-  onClose: () => void
+  onSwitch: (method: AuthMethods) => void
 }
 
-export const AuthLogInForm: React.FC<IAuthLogInForm> = ({ className, onSwitch, onClose }) => {
+export const AuthLogInForm: React.FC<IAuthLogInForm> = ({ className, onSwitch }) => {
   const methods = useForm<LogInFormType>({
     resolver: zodResolver(logInSchema),
     defaultValues: {
@@ -29,6 +31,7 @@ export const AuthLogInForm: React.FC<IAuthLogInForm> = ({ className, onSwitch, o
     },
   })
 
+  const { onClose } = useAuthModal()
   const { isSubmitting } = methods.formState
 
   const onSubmit: SubmitHandler<LogInFormType> = async (data) => {
@@ -74,7 +77,7 @@ export const AuthLogInForm: React.FC<IAuthLogInForm> = ({ className, onSwitch, o
             size="lg"
             type="button"
             isLoading={isSubmitting}
-            onClick={onSwitch}
+            onClick={() => onSwitch(AuthMethods.REGISTER)}
           >
             Зарегистрироваться
           </Button>

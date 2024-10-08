@@ -10,18 +10,19 @@ import { useForm, FormProvider, type SubmitHandler } from 'react-hook-form'
 
 import { Button } from '@/components/ui'
 import { FormField, Heading } from '@/components/shared'
+import { AuthMethods } from '@/components/shared/modals/auth-modal'
+
 import { registerSchema } from '@/schemas'
+import { registerUser } from '@/app/actions'
 
 import type { RegisterFormType } from '@/types/auth.types'
-import { registerUser } from '@/app/actions'
 
 interface IAuthRegisterForm {
   className?: string
-  onSwitch: () => void
-  onClose: () => void
+  onSwitch: (method: AuthMethods) => void
 }
 
-export const AuthRegisterForm: React.FC<IAuthRegisterForm> = ({ className, onSwitch, onClose }) => {
+export const AuthRegisterForm: React.FC<IAuthRegisterForm> = ({ className, onSwitch }) => {
   const methods = useForm<RegisterFormType>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -36,7 +37,11 @@ export const AuthRegisterForm: React.FC<IAuthRegisterForm> = ({ className, onSwi
   const onSubmit: SubmitHandler<RegisterFormType> = async (data) => {
     try {
       await registerUser(data)
-      onClose()
+      const response = await signIn('credentials', { ...data, redirect: false })
+
+      if (!response?.ok) throw Error()
+
+      onSwitch(AuthMethods.VERIFY)
     } catch (error) {
       toast.error('Ой! Кажется, что-то пошло не так...')
       console.error('AuthModal: RegisterForm()', error)
@@ -74,7 +79,7 @@ export const AuthRegisterForm: React.FC<IAuthRegisterForm> = ({ className, onSwi
             size="lg"
             type="button"
             isLoading={isSubmitting}
-            onClick={onSwitch}
+            onClick={() => onSwitch(AuthMethods.LOGIN)}
           >
             Войти
           </Button>

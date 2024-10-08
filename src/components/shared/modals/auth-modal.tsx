@@ -8,23 +8,31 @@ import { signIn } from 'next-auth/react'
 
 import { Button } from '@/components/ui'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { AuthLogInForm, AuthRegisterForm } from '@/components/shared'
+import { AuthLogInForm, AuthRegisterForm, AuthVerifyForm } from '@/components/shared'
 
-interface IAuthModal {
-  isOpen?: boolean
-  className?: string
-  onClose: () => void
+import { useAuthModal } from '@/hooks'
+
+export enum AuthMethods {
+  LOGIN = 'login',
+  REGISTER = 'register',
+  VERIFY = 'verify',
 }
 
-export const AuthModal: React.FC<IAuthModal> = ({ isOpen, className, onClose }) => {
-  const [method, setMethod] = React.useState<'login' | 'register'>('login')
+interface IAuthModal {
+  className?: string
+}
+
+export const AuthModal: React.FC<IAuthModal> = ({ className }) => {
+  const [method, setMethod] = React.useState<AuthMethods>(AuthMethods.LOGIN)
+
+  const { isOpen, onClose } = useAuthModal()
 
   const handleOnClose = () => {
     onClose()
   }
 
-  const onSwitch = () => {
-    method === 'login' ? setMethod('register') : setMethod('login')
+  const onSwitch = (method: AuthMethods) => {
+    setMethod(method)
   }
 
   return (
@@ -32,11 +40,9 @@ export const AuthModal: React.FC<IAuthModal> = ({ isOpen, className, onClose }) 
       <DialogContent
         className={cn('w-[28rem] max-w-[28rem] p-8 gap-0 bg-white overflow-hidden', className)}
       >
-        {method === 'login' ? (
-          <AuthLogInForm onSwitch={onSwitch} onClose={onClose} />
-        ) : (
-          <AuthRegisterForm onSwitch={onSwitch} onClose={onClose} />
-        )}
+        {method === AuthMethods.LOGIN && <AuthLogInForm onSwitch={onSwitch} />}
+        {method === AuthMethods.REGISTER && <AuthRegisterForm onSwitch={onSwitch} />}
+        {method === AuthMethods.VERIFY && <AuthVerifyForm />}
 
         <div className="my-3.5 gap-3 flex items-center">
           <div className="w-full h-[1px] bg-neutral-300" />
