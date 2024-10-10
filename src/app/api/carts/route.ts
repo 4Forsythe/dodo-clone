@@ -1,7 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { v4 as uuid } from 'uuid'
-import { findCart, refreshCartTotal } from '@/lib'
+import { findCart } from '@/lib/find-cart'
+import { refreshCartTotal } from '@/lib/calc-totals'
+import { getUserSession } from '@/lib/get-user-session'
 import { CART_TOKEN } from '@/constants'
 
 import type { ICreateCartItem } from '@/types'
@@ -19,7 +21,8 @@ export async function POST(request: NextRequest) {
       token = uuid()
     }
 
-    const cart = await findCart(token)
+    const user = await getUserSession()
+    const cart = await findCart(token, user?.id)
 
     const item = await prisma.cartItem.findFirst({
       where: {
@@ -49,7 +52,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    const data = await refreshCartTotal(token)
+    const data = await refreshCartTotal(token, user?.id)
 
     const response = NextResponse.json(data)
     response.cookies.set(CART_TOKEN, token, { maxAge: 60 * 60 * 24 * 14 })
@@ -67,6 +70,8 @@ export async function POST(request: NextRequest) {
 /* getMine() */
 export async function GET(request: NextRequest) {
   try {
+    const user = await getUserSession()
+
     const token = request.cookies.get(CART_TOKEN)?.value
 
     if (!token) {
@@ -74,7 +79,7 @@ export async function GET(request: NextRequest) {
     }
 
     const cart = await prisma.cart.findFirst({
-      where: { token },
+      where: user ? { userId: user.id } : { token },
       include: {
         items: {
           include: { variant: { include: { product: true } }, doppings: true },

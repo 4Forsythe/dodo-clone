@@ -70,9 +70,12 @@ export const calcCartTotal = (
  * @returns объект корзины или неизвестное (Cart | undefined)
  */
 
-export const refreshCartTotal = async (token: string): Promise<Cart | undefined> => {
+export const refreshCartTotal = async (
+  token: string,
+  userId?: string
+): Promise<Cart | undefined> => {
   const cart = await prisma.cart.findFirst({
-    where: { OR: [{ userId: token }, { token }] },
+    where: userId ? { userId } : { token },
     include: {
       items: {
         include: { variant: { include: { product: true } }, doppings: true },

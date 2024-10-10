@@ -8,14 +8,14 @@ import type { Cart } from '@prisma/client'
  * @returns объект корзины (Cart)
  */
 
-export const findCart = async (token: string): Promise<Cart> => {
+export const findCart = async (token: string, userId?: string): Promise<Cart> => {
   let cart = await prisma.cart.findFirst({
-    where: { OR: [{ userId: token }, { token }] },
+    where: userId ? { userId } : { token },
   })
 
   if (!cart) {
     cart = await prisma.cart.create({
-      data: { token },
+      data: userId ? { userId, token: userId } : { token },
     })
   }
 

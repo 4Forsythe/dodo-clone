@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { refreshCartTotal } from '@/lib'
+import { refreshCartTotal } from '@/lib/calc-totals'
 import { CART_TOKEN } from '@/constants'
 
 import { prisma } from '@/prisma/prisma-client'
