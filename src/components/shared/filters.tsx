@@ -33,7 +33,7 @@ export const Filters: React.FC<IFilters> = ({ className }) => {
   useUpdateFilters(filters)
 
   return (
-    <div className={cn('my-6', className)}>
+    <div className={cn('my-6 top-[104px] sticky', className)}>
       {/* Размеры */}
       <FilterCheckboxGroup
         id="sizes"
