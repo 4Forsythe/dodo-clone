@@ -4,10 +4,12 @@ import { hashSync } from 'bcrypt'
 import { faker } from '@faker-js/faker'
 
 import {
-  categories,
-  ingredients,
-  products,
-  productsWithVariants,
+  CATEGORIES,
+  INGREDIENTS,
+  PRODUCTS,
+  PRODUCTS_WITH_VARIANTS,
+  STORY_ITEMS,
+  STORIES,
 } from '../constants/seed.constants'
 
 const prisma = new PrismaClient()
@@ -26,24 +28,24 @@ async function main() {
 async function up() {
   /* Категории */
   await prisma.category.createMany({
-    data: categories,
+    data: CATEGORIES,
   })
 
   /* Ингредиенты */
   await prisma.ingredient.createMany({
-    data: ingredients,
+    data: INGREDIENTS,
   })
 
   /* Товары с вариациями */
   await Promise.all(
-    productsWithVariants.map(async (product) => {
+    PRODUCTS_WITH_VARIANTS.map(async (product) => {
       const { id } = await prisma.product.create({
         data: {
           ...product,
           ingredients: {
-            connect: ingredients.slice(
-              faker.number.int({ min: 0, max: ingredients.length / 2 }),
-              faker.number.int({ min: ingredients.length / 2, max: ingredients.length })
+            connect: INGREDIENTS.slice(
+              faker.number.int({ min: 0, max: INGREDIENTS.length / 2 }),
+              faker.number.int({ min: INGREDIENTS.length / 2, max: INGREDIENTS.length })
             ),
           },
         },
@@ -65,7 +67,7 @@ async function up() {
 
   /* Товары без вариаций */
   await Promise.all(
-    products.map(async (product) => {
+    PRODUCTS.map(async (product) => {
       const { id } = await prisma.product.create({
         data: product,
       })
@@ -82,6 +84,16 @@ async function up() {
       })
     })
   )
+
+  /* Сторисы */
+  await prisma.stories.createMany({
+    data: STORIES,
+  })
+
+  /* Сторис-карточки */
+  await prisma.story.createMany({
+    data: STORY_ITEMS,
+  })
 
   /* Юзеры и товары в корзинах */
   Array.from({ length: 5 }, async () => {
@@ -125,6 +137,8 @@ async function down() {
   await prisma.$executeRaw`TRUNCATE TABLE "Ingredient" RESTART IDENTITY CASCADE`
   await prisma.$executeRaw`TRUNCATE TABLE "ProductVariant" RESTART IDENTITY CASCADE`
   await prisma.$executeRaw`TRUNCATE TABLE "Product" RESTART IDENTITY CASCADE`
+  await prisma.$executeRaw`TRUNCATE TABLE "Story" RESTART IDENTITY CASCADE`
+  await prisma.$executeRaw`TRUNCATE TABLE "Stories" RESTART IDENTITY CASCADE`
 }
 
 main()
