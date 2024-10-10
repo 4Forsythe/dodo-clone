@@ -15,25 +15,25 @@ export const CheckoutForm: React.FC<ICheckoutForm> = ({ isLoading, className }) 
       <CheckoutBlock title="№2 Персональные данные" isLoading={isLoading}>
         <div className="gap-5 flex flex-col">
           <div className="gap-7 flex items-start">
-            <label htmlFor="customerName" className="w-1/4 py-3 font-semibold">
+            <label htmlFor="customerName" className="w-1/3 py-3 font-semibold">
               Имя получателя
             </label>
-            <FormField name="customerName" className="w-[65%]" required />
+            <FormField name="customerName" className="w-[70%]" required />
           </div>
           <div className="gap-7 flex items-start">
-            <label htmlFor="customerEmail" className="w-1/4 py-3 font-semibold">
+            <label htmlFor="customerEmail" className="w-1/3 py-3 font-semibold">
               Электронная почта
             </label>
-            <FormField name="customerEmail" className="w-[65%]" required />
+            <FormField name="customerEmail" className="w-[70%]" required />
           </div>
           <div className="gap-7 flex items-start">
-            <label htmlFor="customerPhone" className="w-1/4 py-3 font-semibold">
+            <label htmlFor="customerPhone" className="w-1/3 py-3 font-semibold">
               Номер телефона
             </label>
             <FormField
               name="customerPhone"
               mask="{+7} (000) 000-00-00"
-              className="w-[65%]"
+              className="w-[70%]"
               required
             />
           </div>

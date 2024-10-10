@@ -114,6 +114,7 @@ export default async function ThanksPage({
         <div className="w-[15rem] gap-2.5 flex flex-col">
           <Link
             className="text-lg font-medium text-primary transition duration-200 hover:text-primary/80"
+            href="/"
             target="_blank"
           >
             Написать в чат
@@ -121,6 +122,7 @@ export default async function ThanksPage({
 
           <Link
             className="text-lg font-medium text-primary transition duration-200 hover:text-primary/80"
+            href="/"
             target="_blank"
           >
             Поддержать разработчика

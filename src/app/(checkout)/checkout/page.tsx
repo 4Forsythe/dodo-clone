@@ -22,9 +22,11 @@ import { checkoutSchema } from '@/schemas'
 import { createOrder } from '@/app/actions'
 
 import type { ICreateOrder } from '@/types'
+import { useSession } from 'next-auth/react'
 
 export default function CheckoutPage() {
   const router = useRouter()
+  const { data: session, status } = useSession()
 
   const [isSubmitting, setIsSubmitting] = React.useState(false)
 
@@ -39,6 +41,14 @@ export default function CheckoutPage() {
       comment: '',
     },
   })
+
+  React.useEffect(() => {
+    methods.reset({
+      customerName: session?.user.name || '',
+      customerEmail: session?.user.email,
+      customerPhone: session?.user.phone || '',
+    })
+  }, [status])
 
   const onSubmit: SubmitHandler<ICreateOrder> = async (data) => {
     try {
