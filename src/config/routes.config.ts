@@ -6,6 +6,7 @@ class ROUTES {
   PRODUCT = `${this.BASE_URL}/product`
   CHECKOUT = `${this.BASE_URL}/checkout`
   THANKS = `${this.BASE_URL}/thanks`
+  DONATE = `${this.BASE_URL}/donate`
   UNAUTHORIZED = `${this.BASE_URL}/unauthorized`
   ACTIVATE = `${this.BASE_URL}/api/auth/activate`
 }
