@@ -6,7 +6,7 @@ import Link from 'next/link'
 import type { Category } from '@prisma/client'
 
 import { cn } from '@/lib/utils'
-import { useCategoryStore } from '@/store/category'
+import { useFiltersStore } from '@/store'
 
 interface ICategories {
   items: Category[]
@@ -14,7 +14,7 @@ interface ICategories {
 }
 
 export const Categories: React.FC<ICategories> = ({ items, className }) => {
-  const { categoryId } = useCategoryStore()
+  const { category } = useFiltersStore()
 
   return (
     <ul
@@ -25,7 +25,7 @@ export const Categories: React.FC<ICategories> = ({ items, className }) => {
           key={item.id}
           className={cn(
             'flex items-center text-sm font-bold rounded-xl',
-            categoryId === item.id && 'text-primary bg-white shadow-md shadow-gray-200'
+            category === item.id && 'text-primary bg-white shadow-md shadow-gray-200'
           )}
         >
           <Link href={`/#category=${item.id}`} className="px-4 py-1.5">

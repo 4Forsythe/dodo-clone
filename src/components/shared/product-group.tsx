@@ -4,9 +4,10 @@ import React from 'react'
 
 import { cn } from '@/lib'
 import { useIntersection } from 'react-use'
-import { useCategoryStore } from '@/store/category'
 
 import { Heading, ProductCard } from '@/components/shared'
+
+import { useFiltersStore } from '@/store'
 
 import type { ProductType } from '@/types'
 
@@ -18,7 +19,7 @@ interface IProductGroup {
 }
 
 export const ProductGroup: React.FC<IProductGroup> = ({ title, items, categoryId, className }) => {
-  const { setCategoryId } = useCategoryStore()
+  const { setCategory } = useFiltersStore()
   const intersectionRef = React.useRef(null)
 
   const intersection = useIntersection(intersectionRef, {
@@ -28,7 +29,7 @@ export const ProductGroup: React.FC<IProductGroup> = ({ title, items, categoryId
 
   React.useEffect(() => {
     if (intersection?.isIntersecting) {
-      setCategoryId(categoryId)
+      setCategory(categoryId)
     }
   }, [categoryId, intersection?.isIntersecting])
 
