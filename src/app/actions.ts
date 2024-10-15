@@ -5,9 +5,10 @@ import { cookies } from 'next/headers'
 
 import { prisma } from '@/prisma/prisma-client'
 
-import { route } from '@/config'
 import { sendMail } from '@/lib/send-mail'
 import { getUserSession } from '@/lib/get-user-session'
+
+import { route } from '@/config'
 import { CART_TOKEN } from '@/constants'
 
 import type { Prisma } from '@prisma/client'
@@ -43,6 +44,26 @@ export async function updateUser(dto: Prisma.UserUpdateInput) {
     }
   } catch (error) {
     console.error('actions: updateUser()', error)
+  }
+}
+
+export async function deleteUser() {
+  try {
+    const user = await getUserSession()
+
+    if (!user) throw new Error('Current user is not found')
+
+    const data = await prisma.user.findUnique({
+      where: { id: user.id },
+    })
+
+    if (data) {
+      await prisma.user.delete({
+        where: { id: data.id },
+      })
+    }
+  } catch (error) {
+    console.error('actions: deleteUser()', error)
   }
 }
 
