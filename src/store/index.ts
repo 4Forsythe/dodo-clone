@@ -1,3 +1,3 @@
 export { useCartStore, type ICartState } from './cart'
-export { useCategoryStore } from './category'
+export { useFiltersStore, type IFiltersState } from './filters'
 export { useStoriesStore, type IStoriesState } from './stories'

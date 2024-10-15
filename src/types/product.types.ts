@@ -5,6 +5,12 @@ export type ProductType = Product & {
   ingredients: Ingredient[]
 }
 
+export enum ProductSortBy {
+  NAME = 'name',
+  RATING = 'rating',
+  CREATED_AT = 'createdAt',
+}
+
 export interface IProductParams {
   query?: string
   types?: string
