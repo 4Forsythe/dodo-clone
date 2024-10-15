@@ -20,9 +20,14 @@ import type { RegisterFormType } from '@/types/auth.types'
 interface IAuthRegisterForm {
   className?: string
   onSwitch: (method: AuthMethods) => void
+  setIsRedirecting: (isRedirecting: boolean) => void
 }
 
-export const AuthRegisterForm: React.FC<IAuthRegisterForm> = ({ className, onSwitch }) => {
+export const AuthRegisterForm: React.FC<IAuthRegisterForm> = ({
+  className,
+  onSwitch,
+  setIsRedirecting,
+}) => {
   const methods = useForm<RegisterFormType>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -36,6 +41,7 @@ export const AuthRegisterForm: React.FC<IAuthRegisterForm> = ({ className, onSwi
 
   const onSubmit: SubmitHandler<RegisterFormType> = async (data) => {
     try {
+      setIsRedirecting(true)
       await registerUser(data)
       const response = await signIn('credentials', { ...data, redirect: false })
 
@@ -45,6 +51,8 @@ export const AuthRegisterForm: React.FC<IAuthRegisterForm> = ({ className, onSwi
     } catch (error) {
       toast.error('Ой! Кажется, что-то пошло не так...')
       console.error('AuthModal: RegisterForm()', error)
+    } finally {
+      setIsRedirecting(false)
     }
   }
 

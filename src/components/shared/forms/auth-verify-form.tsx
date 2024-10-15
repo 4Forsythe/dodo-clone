@@ -20,9 +20,10 @@ import type { VerifyFormType } from '@/types'
 
 interface IAuthVerifyForm {
   className?: string
+  setIsRedirecting: (isRedirecting: boolean) => void
 }
 
-export const AuthVerifyForm: React.FC<IAuthVerifyForm> = ({ className }) => {
+export const AuthVerifyForm: React.FC<IAuthVerifyForm> = ({ className, setIsRedirecting }) => {
   const { data: session, status } = useSession()
 
   const methods = useForm<VerifyFormType>({
@@ -39,6 +40,8 @@ export const AuthVerifyForm: React.FC<IAuthVerifyForm> = ({ className }) => {
 
   const onSubmit: SubmitHandler<VerifyFormType> = async (data) => {
     try {
+      setIsRedirecting(true)
+
       if (session?.user) {
         await api.auth.activate({ user: session.user.id, code: data.code })
 
@@ -48,6 +51,8 @@ export const AuthVerifyForm: React.FC<IAuthVerifyForm> = ({ className }) => {
     } catch (error) {
       toast.error('Введен неверный код подтверждения')
       console.error('AuthModal: VerifyForm()', error)
+    } finally {
+      setIsRedirecting(false)
     }
   }
 

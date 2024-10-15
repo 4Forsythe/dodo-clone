@@ -1,4 +1,6 @@
 export { AuthLogInForm } from './auth-log-in-form'
 export { AuthRegisterForm } from './auth-register-form'
+export { AuthVerifyForm } from './auth-verify-form'
 export { ProductForm } from './product-form'
 export { ProductModalForm } from './product-modal-form'
+export { ProfileForm } from './profile-form'

@@ -20,9 +20,14 @@ import type { LogInFormType } from '@/types/auth.types'
 interface IAuthLogInForm {
   className?: string
   onSwitch: (method: AuthMethods) => void
+  setIsRedirecting: (isRedirecting: boolean) => void
 }
 
-export const AuthLogInForm: React.FC<IAuthLogInForm> = ({ className, onSwitch }) => {
+export const AuthLogInForm: React.FC<IAuthLogInForm> = ({
+  className,
+  onSwitch,
+  setIsRedirecting,
+}) => {
   const methods = useForm<LogInFormType>({
     resolver: zodResolver(logInSchema),
     defaultValues: {
@@ -36,6 +41,7 @@ export const AuthLogInForm: React.FC<IAuthLogInForm> = ({ className, onSwitch })
 
   const onSubmit: SubmitHandler<LogInFormType> = async (data) => {
     try {
+      setIsRedirecting(true)
       const response = await signIn('credentials', { ...data, redirect: false })
 
       if (!response?.ok) throw Error()
@@ -44,6 +50,8 @@ export const AuthLogInForm: React.FC<IAuthLogInForm> = ({ className, onSwitch })
     } catch (error) {
       toast.error('Ой! Кажется, что-то пошло не так...')
       console.error('AuthModal: LogInForm()', error)
+    } finally {
+      setIsRedirecting(false)
     }
   }
 
