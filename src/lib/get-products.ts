@@ -2,13 +2,15 @@ import { prisma } from '@/prisma/prisma-client'
 
 import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/constants'
 
-import type { IProductParams } from '@/types'
+import { type IProductParams, ProductSortBy } from '@/types/product.types'
 
 export const getProducts = async (params: IProductParams) => {
   // Конвертация строковых значений в массивы чисел
   const sizes = params.sizes?.split(',').map(Number)
   const types = params.types?.split(',').map(Number)
   const ingredients = params.ingredients?.split(',').map(Number)
+
+  const sortBy = params.sortBy
 
   // Значения разброса по стоимости
   const from = Number(params.from) || DEFAULT_PRICE_FROM
@@ -25,10 +27,14 @@ export const getProducts = async (params: IProductParams) => {
           ingredients: ingredients ? { some: { id: { in: ingredients } } } : undefined,
         },
         include: {
-          variants: { orderBy: { price: 'asc' } },
+          variants: {
+            orderBy: { price: 'asc' },
+          },
           ingredients: true,
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: sortBy
+          ? { [sortBy]: sortBy === ProductSortBy.NAME ? 'asc' : 'desc' }
+          : { createdAt: 'desc' },
       },
     },
   })
