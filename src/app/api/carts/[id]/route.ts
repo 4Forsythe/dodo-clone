@@ -4,6 +4,7 @@ import { refreshCartTotal } from '@/lib/calc-totals'
 import { CART_TOKEN } from '@/constants'
 
 import { prisma } from '@/prisma/prisma-client'
+import { getUserSession } from '@/lib/get-user-session'
 
 /* update() */
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
@@ -12,6 +13,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     const body = (await request.json()) as { quantity: number }
 
     const token = request.cookies.get(CART_TOKEN)?.value
+    const user = await getUserSession()
 
     if (!token) {
       return NextResponse.json(
@@ -39,7 +41,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     if (body.quantity === 0) {
       await prisma.cartItem.delete({ where: { id } })
 
-      const cart = await refreshCartTotal(token)
+      const cart = await refreshCartTotal(token, user?.id)
 
       return NextResponse.json(cart)
     }
@@ -49,7 +51,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       data: { quantity: body.quantity },
     })
 
-    const cart = await refreshCartTotal(token)
+    const cart = await refreshCartTotal(token, user?.id)
 
     return NextResponse.json(cart)
   } catch (error) {
@@ -67,6 +69,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     const { id } = params
 
     const token = request.cookies.get(CART_TOKEN)?.value
+    const user = await getUserSession()
 
     if (!token) {
       return NextResponse.json(
@@ -86,7 +89,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     await prisma.cartItem.delete({ where: { id } })
 
-    const cart = await refreshCartTotal(token)
+    const cart = await refreshCartTotal(token, user?.id)
 
     return NextResponse.json(cart)
   } catch (error) {
