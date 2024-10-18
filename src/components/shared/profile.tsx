@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 import { cn } from '@/lib'
 import { toast } from 'sonner'
-import { Pizza } from 'lucide-react'
+import { Mails, Pizza, TriangleAlert } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 
 import { Button } from '@/components/ui'
@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/alert-dialog'
 
 import { route } from '@/config'
-import { deleteUser } from '@/app/actions'
+import { deleteUser, sendCode } from '@/app/actions'
 
 import type { User } from '@prisma/client'
 
@@ -36,10 +36,27 @@ interface IProfile {
 export const Profile: React.FC<IProfile> = ({ profile, isActivated, className }) => {
   const router = useRouter()
 
+  const [isSending, setIsSending] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
 
   const onCloseTip = () => {
     router.replace(route.PROFILE)
+  }
+
+  const onSendMail = async () => {
+    try {
+      setIsLoading(true)
+
+      await sendCode(profile.email)
+
+      setIsSending(true)
+      toast.success(`Письмо отправлено на ${profile.email}`)
+    } catch (error) {
+      toast.error('Сейчас мы не можем отправить письмо...')
+      console.error('Profile: onSendMail()', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const onDeleteProfile = async () => {
@@ -61,17 +78,50 @@ export const Profile: React.FC<IProfile> = ({ profile, isActivated, className })
   return (
     <Container className={cn('w-full pt-10 pb-20', className)}>
       <div className="flex-col">
-        {isActivated && (
+        {profile.activatedAt && isActivated && (
           <TipBlock
             className="max-w-[30rem]"
             icon={Pizza}
             title="Учетная запись подтверждена"
             description="Вы успешно прошли все этапы регистрации и подтвердили свой адрес электронной почты. Теперь вам доступны все возможности сайта. Спасибо за регистрацию!"
-            onClick={onCloseTip}
+            extra={
+              <Button className="w-fit rounded-xl" size="sm" onClick={onCloseTip}>
+                Всё понятно
+              </Button>
+            }
+          />
+        )}
+
+        {!profile.activatedAt && !isSending && (
+          <TipBlock
+            className="max-w-[35rem]"
+            icon={TriangleAlert}
+            title="Учетная запись не подтверждена"
+            description="На ваш адрес электронной почты было отправлено письмо для подтверждения, которое вы проигнорировали. Вы все еще можете перейти по ссылке в нем, чтобы снять имеющиеся ограничения."
+            extra={
+              <Button
+                className="w-fit rounded-xl"
+                size="sm"
+                isLoading={isLoading}
+                onClick={onSendMail}
+              >
+                Подтвердить email
+              </Button>
+            }
+          />
+        )}
+
+        {!profile.activatedAt && isSending && (
+          <TipBlock
+            className="max-w-[30rem]"
+            icon={Mails}
+            title="Письмо для подтверждения отправлено"
+            description="Мы отправили новое письмо для подтверждения на ваш адрес электронной почты. Пожалуйста, перейдите по ссылке из него для верификации учетной записи."
           />
         )}
 
         <ProfileForm profile={profile} />
+
         <div className="mt-20 gap-2.5 flex items-center">
           <Button
             className="font-semibold rounded-xl"

@@ -26,6 +26,10 @@ export const CheckoutCart: React.FC<ICheckoutCart> = ({
   return (
     <CheckoutBlock title="№1 Корзина" className={className}>
       <div className="gap-3 flex flex-col">
+        {!isLoading && !(items.length > 0) && (
+          <span className="font-medium text-gray-400">В вашей корзине нет ни одного товара...</span>
+        )}
+
         {isLoading
           ? [...Array(2)].map((_, index) => (
               <div key={index} className="p-2 gap-5 flex items-center">
