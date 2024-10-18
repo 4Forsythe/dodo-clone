@@ -1,4 +1,4 @@
-import { redirect, notFound } from 'next/navigation'
+import { redirect } from 'next/navigation'
 
 import { getUserSession } from '@/lib/get-user-session'
 
@@ -18,7 +18,7 @@ export default async function ProfilePage({
 
   const profile = await prisma.user.findFirst({ where: { id: user.id } })
 
-  if (!profile) notFound()
+  if (!profile) redirect(route.UNAUTHORIZED)
 
   const isActivated = typeof searchParams?.activated !== 'undefined'
 
