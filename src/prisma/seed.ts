@@ -42,6 +42,7 @@ async function up() {
       const { id } = await prisma.product.create({
         data: {
           ...product,
+          rating: faker.number.int({ min: 0, max: 10 }),
           ingredients: {
             connect: INGREDIENTS.slice(
               faker.number.int({ min: 0, max: INGREDIENTS.length / 2 }),
@@ -69,7 +70,10 @@ async function up() {
   await Promise.all(
     PRODUCTS.map(async (product) => {
       const { id } = await prisma.product.create({
-        data: product,
+        data: {
+          ...product,
+          rating: faker.number.int({ min: 0, max: 10 }),
+        },
       })
 
       const variant = {
