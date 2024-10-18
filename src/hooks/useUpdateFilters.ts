@@ -26,7 +26,7 @@ export const useUpdateFilters = (filters: IFilterParamsResponse) => {
         sortBy,
       }
 
-      router.push(`#category=${category}?${qs.stringify(params, { arrayFormat: 'comma' })}`, {
+      router.push(`?${qs.stringify(params, { arrayFormat: 'comma' })}#category=${category}`, {
         scroll: false,
       })
     }
