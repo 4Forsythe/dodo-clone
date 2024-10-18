@@ -67,32 +67,25 @@ export async function deleteUser() {
   }
 }
 
-export async function registerUser(dto: Prisma.UserCreateInput) {
+export async function sendCode(email: string) {
   try {
-    const isExistingUser = await prisma.user.findFirst({
-      where: { email: dto.email },
+    const user = await prisma.user.findFirst({
+      where: { email },
     })
 
-    if (isExistingUser) {
-      if (!isExistingUser.activatedAt) throw new Error('User email is not activated')
+    if (!user) throw new Error('User is not found')
 
-      throw new Error('User is already exist')
-    }
-
-    const user = await prisma.user.create({
-      data: {
-        email: dto.email,
-        password: hashSync(dto.password as string, 12),
-      },
-    })
+    if (user.activatedAt) throw new Error('User email is already activated')
 
     const code = Math.floor(100000 + Math.random() * 900000).toString()
 
-    await prisma.activationCode.create({
-      data: {
+    await prisma.activationCode.upsert({
+      where: { userId: user.id },
+      create: {
         code,
         userId: user.id,
       },
+      update: { code },
     })
 
     await sendMail({
@@ -106,6 +99,31 @@ export async function registerUser(dto: Prisma.UserCreateInput) {
         },
       },
     })
+  } catch (error) {
+    console.error('actions: sendCode()', error)
+  }
+}
+
+export async function registerUser(dto: Prisma.UserCreateInput) {
+  try {
+    const user = await prisma.user.findFirst({
+      where: { email: dto.email },
+    })
+
+    if (user) {
+      if (!user.activatedAt) throw new Error('User email is not activated')
+
+      throw new Error('User is already exist')
+    }
+
+    await prisma.user.create({
+      data: {
+        email: dto.email,
+        password: hashSync(dto.password as string, 12),
+      },
+    })
+
+    await sendCode(dto.email)
   } catch (error) {
     console.error('actions: registerUser()', error)
   }
@@ -122,7 +140,7 @@ export async function createOrder(dto: ICreateOrder) {
     const token = cookies().get(CART_TOKEN)?.value
 
     const cart = await prisma.cart.findFirst({
-      where: { OR: [{ id: user.id }, { token }] },
+      where: { OR: [{ userId: user.id }, { token }] },
       include: {
         user: true,
         items: {
