@@ -5,7 +5,8 @@ class ROUTES {
   PROFILE = `${this.BASE_URL}/profile`
   PRODUCT = `${this.BASE_URL}/product`
   CHECKOUT = `${this.BASE_URL}/checkout`
-  THANKS = `${this.BASE_URL}/thanks`
+  THANKS = `${this.CHECKOUT}/thanks`
+  ABOUT = `${this.BASE_URL}/about`
   DONATE = `${this.BASE_URL}/donate`
   UNAUTHORIZED = `${this.BASE_URL}/unauthorized`
   ACTIVATE = `${this.BASE_URL}/api/auth/activate`
