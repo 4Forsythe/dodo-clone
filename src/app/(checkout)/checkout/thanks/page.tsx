@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+
 import React from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -7,6 +9,12 @@ import { calcCartTotal, declineNoun, formatPhone, getOrder } from '@/lib'
 
 import { CheckoutBlock, Container, Heading, OrderCartItem } from '@/components/shared'
 
+import { route } from '@/config'
+
+export const metadata: Metadata = {
+  title: '🍕 Спасибо за заказ',
+}
+
 export default async function ThanksPage({
   searchParams,
 }: {
@@ -14,7 +22,7 @@ export default async function ThanksPage({
 }) {
   const params = searchParams?.order
 
-  const orderId = Number(params?.slice(37))
+  const orderId = Number(params?.slice(36))
   const userId = String(params?.slice(0, 36))
 
   if (!orderId || !userId) return notFound()
@@ -114,7 +122,7 @@ export default async function ThanksPage({
         <div className="w-[15rem] gap-2.5 flex flex-col">
           <Link
             className="text-lg font-medium text-primary transition duration-200 hover:text-primary/80"
-            href="/"
+            href={process.env.NEXT_PUBLIC_TELEGRAM_URL as string}
             target="_blank"
           >
             Написать в чат
@@ -122,7 +130,7 @@ export default async function ThanksPage({
 
           <Link
             className="text-lg font-medium text-primary transition duration-200 hover:text-primary/80"
-            href="/"
+            href={route.DONATE}
             target="_blank"
           >
             Поддержать разработчика

@@ -1,4 +1,7 @@
+import type { Metadata } from 'next'
+
 import { Providers } from './providers'
+import { SITE_NAME, SITE_DESCRIPTION } from '@/constants'
 
 import { Nunito } from 'next/font/google'
 
@@ -9,6 +12,14 @@ const nunito = Nunito({
   weight: ['400', '500', '600', '700', '800', '900'],
   variable: '--font-nunito',
 })
+
+export const metadata: Metadata = {
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+}
 
 export default function AppLayout({
   children,

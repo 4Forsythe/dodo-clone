@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { getUserSession } from '@/lib/get-user-session'
@@ -6,6 +7,10 @@ import { route } from '@/config'
 import { prisma } from '@/prisma/prisma-client'
 
 import { Profile } from '@/components/shared/profile'
+
+export const metadata: Metadata = {
+  title: '🍕 Личный кабинет',
+}
 
 export default async function ProfilePage({
   searchParams,

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { getUserSession } from '@/lib/get-user-session'
@@ -6,6 +7,10 @@ import { route } from '@/config'
 import { prisma } from '@/prisma/prisma-client'
 
 import { Checkout } from '@/components/shared'
+
+export const metadata: Metadata = {
+  title: '🍕 Оформление заказа',
+}
 
 export default async function CheckoutPage() {
   const user = await getUserSession()

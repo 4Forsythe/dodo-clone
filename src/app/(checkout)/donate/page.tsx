@@ -1,7 +1,12 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { DynamicImage } from '@/components/shared/dynamic-image'
 import { Container, Heading, RequisitesToShare } from '@/components/shared'
+
+export const metadata: Metadata = {
+  title: '🍕 Поддержать разработчика',
+}
 
 export default function DonatePage() {
   const GITHUB_USERNAME = process.env.GITHUB_USERNAME

@@ -1,8 +1,15 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Container, Heading } from '@/components/shared'
 
+export const metadata: Metadata = {
+  title: '🍕 О нас',
+}
+
 export default function AboutPage() {
+  const GITHUB_USERNAME = process.env.GITHUB_USERNAME
+
   return (
     <Container className="w-full pt-10 pb-20">
       <div className="max-w-[800px] flex flex-1 flex-col">
@@ -11,7 +18,11 @@ export default function AboutPage() {
 
           <p className="text-lg font-medium">
             <b>Dodo Clone</b> — это проект, разработанный{' '}
-            <Link className="text-primary" href="/" target="_blank">
+            <Link
+              className="text-primary"
+              href={`https://github.com/${GITHUB_USERNAME}`}
+              target="_blank"
+            >
               <b>одним энтузиастом</b>
             </Link>
             , которого вдохновила концепция и успех знаменитой{' '}
