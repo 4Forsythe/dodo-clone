@@ -28,7 +28,7 @@ export const ProductCard: React.FC<IProductCard> = ({
 }) => {
   return (
     <div className={className}>
-      <Link href={`${route.PRODUCT}/${id}`} className="h-full flex flex-1 flex-col">
+      <Link href={`${route.PRODUCT}/${id}`} scroll={false} className="h-full flex flex-1 flex-col">
         {/* Картинка */}
         <div className="h-[260px] mb-3 p-6 flex items-center justify-center bg-neutral-50 rounded-[2.5rem] overflow-hidden hover:*:translate-y-1.5">
           <Image
@@ -37,6 +37,7 @@ export const ProductCard: React.FC<IProductCard> = ({
             height={215}
             src={imageUrl || '/images/product-placeholder.svg'}
             alt={name}
+            priority
           />
         </div>
 
