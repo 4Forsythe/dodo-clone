@@ -10,6 +10,8 @@ class ROUTES {
   DONATE = `${this.BASE_URL}/donate`
   UNAUTHORIZED = `${this.BASE_URL}/unauthorized`
   ACTIVATE = `${this.BASE_URL}/api/auth/activate`
+
+  SITEMAP = `${this.BASE_URL}/sitemap.xml`
 }
 
 export const route = new ROUTES()
