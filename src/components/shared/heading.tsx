@@ -2,7 +2,7 @@ import React from 'react'
 
 import { cn } from '@/lib'
 
-type HeadingSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+type HeadingSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 
 interface IHeading {
   text: string
@@ -18,6 +18,7 @@ export const Heading: React.FC<IHeading> = ({ text, size = 'sm', className }) =>
     lg: 'h2',
     xl: 'h1',
     '2xl': 'h1',
+    '3xl': 'h1',
   } as const
 
   const mapClassNameBySize = {
