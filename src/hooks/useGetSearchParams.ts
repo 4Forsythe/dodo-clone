@@ -15,7 +15,7 @@ type GetSearchParamsResponse = string | string[] | undefined | []
  * @returns строка значений параметра, массив строк, неизвестное или пустой массив (string | string[] | undefined | [])
  */
 
-export const getSearchParams = (
+export const useGetSearchParams = (
   key: string,
   options?: IGetSearchParamsOptions
 ): GetSearchParamsResponse => {

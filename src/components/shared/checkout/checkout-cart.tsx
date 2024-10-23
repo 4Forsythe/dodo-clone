@@ -1,9 +1,10 @@
 import React from 'react'
 
+import { getDrawerItemDetails } from '@/lib'
+
 import { Skeleton } from '@/components/ui'
 import { CheckoutBlock, CheckoutCartItem } from '@/components/shared'
 
-import { useDrawerItemDetails } from '@/hooks'
 import type { CartItemState } from '@/store/cart'
 
 interface ICheckoutCart {
@@ -42,7 +43,7 @@ export const CheckoutCart: React.FC<ICheckoutCart> = ({
               </div>
             ))
           : items.map((item) => {
-              const { details, doppings } = useDrawerItemDetails(
+              const { details, doppings } = getDrawerItemDetails(
                 item.size,
                 item.type,
                 item.weight,

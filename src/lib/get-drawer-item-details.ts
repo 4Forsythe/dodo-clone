@@ -2,17 +2,17 @@ import { CartItemState } from '@/store/cart'
 
 import { PIZZA_TYPES_MAP, type PizzaTypes } from '@/constants/variants.constants'
 
-interface IUseDrawerItemDetailsResponse {
+interface GetDrawerItemDetailsResponse {
   details: string
   doppings?: string
 }
 
-export const useDrawerItemDetails = (
+export const getDrawerItemDetails = (
   size: number,
   type: number | undefined,
   weight: number,
   ingredients: CartItemState['ingredients']
-): IUseDrawerItemDetailsResponse => {
+): GetDrawerItemDetailsResponse => {
   const details = []
   const doppings = []
 

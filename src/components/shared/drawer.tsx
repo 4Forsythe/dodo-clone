@@ -4,7 +4,7 @@ import React from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
-import { cn, declineNoun } from '@/lib'
+import { cn, declineNoun, getDrawerItemDetails } from '@/lib'
 import { ChevronRight } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
@@ -22,7 +22,7 @@ import { Heading, DrawerItem } from '@/components/shared'
 import { route } from '@/config/routes.config'
 
 import { MIN_DELIVERY_PRICE } from '@/constants'
-import { useAuthModal, useCart, useDrawerItemDetails } from '@/hooks'
+import { useAuthModal, useCart } from '@/hooks'
 
 interface IDrawer {
   className?: string
@@ -90,7 +90,7 @@ export const Drawer: React.FC<React.PropsWithChildren<IDrawer>> = ({ children, c
                   <Skeleton key={index} className="h-[130px] m-4 bg-neutral-200 rounded-2xl" />
                 ))
               : items.map((item) => {
-                  const { details, doppings } = useDrawerItemDetails(
+                  const { details, doppings } = getDrawerItemDetails(
                     item.size,
                     item.type,
                     item.weight,
