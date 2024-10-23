@@ -7,7 +7,7 @@ export const useOrders = (): IOrderState => {
 
   React.useEffect(() => {
     orders.getOrders()
-  })
+  }, [])
 
   return orders
 }
