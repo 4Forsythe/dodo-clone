@@ -39,6 +39,7 @@ export async function updateUser(dto: Prisma.UserUpdateInput) {
           phone: dto.phone,
           birthday: dto.birthday,
           password: dto.password && hashSync(dto.password as string, 12),
+          isSubscribed: dto.isSubscribed,
         },
       })
     }
@@ -165,6 +166,8 @@ export async function createOrder(dto: ICreateOrder) {
         customerEmail: dto.customerEmail,
         customerPhone: dto.customerPhone,
         address: dto.address,
+        deliveredAt: dto.deliveredAt,
+        isContactless: dto.isContactless,
         comment: dto.comment,
         userId: user.id,
       },
