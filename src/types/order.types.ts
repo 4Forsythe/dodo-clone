@@ -13,4 +13,9 @@ export interface ICreateOrderItem {
   doppings?: number[]
 }
 
+export interface IOrderParams {
+  limit?: number
+  offset?: number
+}
+
 export type ICreateOrder = z.infer<typeof checkoutSchema>

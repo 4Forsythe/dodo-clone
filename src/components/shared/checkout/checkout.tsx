@@ -3,7 +3,7 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 
-import { cn } from '@/lib'
+import { cn, getDeliveryTime } from '@/lib'
 import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ChevronLeft, ChevronRight, Mails, TriangleAlert } from 'lucide-react'
@@ -33,9 +33,13 @@ interface ICheckout {
 
 export const Checkout: React.FC<ICheckout> = ({ profile, className }) => {
   const router = useRouter()
+
   const { name, email, phone, activatedAt } = profile
+
   const [isSending, setIsSending] = React.useState(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
+
+  const variants = getDeliveryTime()
 
   const methods = useForm<ICreateOrder>({
     mode: 'onSubmit',
@@ -45,6 +49,8 @@ export const Checkout: React.FC<ICheckout> = ({ profile, className }) => {
       customerEmail: email,
       customerPhone: phone || '',
       address: '',
+      deliveredAt: variants[0],
+      isContactless: false,
       comment: '',
     },
   })

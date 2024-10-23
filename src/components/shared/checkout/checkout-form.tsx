@@ -1,8 +1,15 @@
+'use client'
+
 import React from 'react'
 
 import { cn } from '@/lib'
 
-import { CheckoutBlock, FormField, FormTextarea } from '@/components/shared'
+import { useFormContext, Controller } from 'react-hook-form'
+
+import { Switch } from '@/components/ui'
+import { CheckoutBlock, FormField, FormTextarea, DeliveryPicker } from '@/components/shared'
+
+import type { ICreateOrder } from '@/types'
 
 interface ICheckoutForm {
   isLoading?: boolean
@@ -10,6 +17,8 @@ interface ICheckoutForm {
 }
 
 export const CheckoutForm: React.FC<ICheckoutForm> = ({ isLoading, className }) => {
+  const { control } = useFormContext<ICreateOrder>()
+
   return (
     <div className={cn('gap-10 flex flex-col', className)}>
       <CheckoutBlock title="№2 Персональные данные" isLoading={isLoading}>
@@ -48,6 +57,22 @@ export const CheckoutForm: React.FC<ICheckoutForm> = ({ isLoading, className }) 
             </label>
             <FormField name="address" className="w-[95%] text-base font-medium" required />
           </div>
+
+          <div className="mb-1.5 gap-2.5 flex items-center">
+            <Controller
+              name="isContactless"
+              control={control}
+              render={({ field }) => (
+                <Switch id="isContactless" checked={field.value} onCheckedChange={field.onChange} />
+              )}
+            />
+            <label htmlFor="isContactless" className="font-semibold">
+              Оставить у двери?
+            </label>
+          </div>
+
+          <DeliveryPicker />
+
           <div className="gap-2.5 flex flex-col">
             <label htmlFor="comment" className="font-semibold">
               Комментарий к заказу

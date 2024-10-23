@@ -14,5 +14,7 @@ export const checkoutSchema = z.object({
     .string()
     .min(5, { message: 'Слишком короткий адрес доставки' })
     .max(250, { message: 'Слишком длинный адрес доставки' }),
+  deliveredAt: z.date({ message: 'Выберите время доставки' }),
+  isContactless: z.boolean().default(false),
   comment: z.string().max(720, { message: 'Слишком большой комментарий к заказу' }).optional(),
 })
