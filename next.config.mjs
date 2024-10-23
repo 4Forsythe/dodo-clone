@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-import withPlaiceholder from '@plaiceholder/next'
-
 const nextConfig = {
   // Загрузка внешних изображений
   images: {
@@ -14,4 +12,4 @@ const nextConfig = {
   },
 }
 
-export default withPlaiceholder(nextConfig)
+export default nextConfig

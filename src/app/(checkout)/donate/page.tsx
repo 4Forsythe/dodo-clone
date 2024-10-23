@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 
-import { DynamicImage } from '@/components/shared/dynamic-image'
+import Link from 'next/link'
+import Image from 'next/image'
+
 import { Container, Heading, RequisitesToShare } from '@/components/shared'
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export default function DonatePage() {
 
           {GITHUB_USERNAME && (
             <div className="gap-3.5 inline-flex items-center">
-              <DynamicImage
+              <Image
                 className="rounded-full"
                 width={60}
                 height={60}
