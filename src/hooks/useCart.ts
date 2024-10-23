@@ -7,7 +7,7 @@ export const useCart = (): ICartState => {
 
   React.useEffect(() => {
     cart.getCart()
-  }, [])
+  })
 
   return cart
 }

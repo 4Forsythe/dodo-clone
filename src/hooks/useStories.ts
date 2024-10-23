@@ -7,7 +7,7 @@ export const useStories = (): IStoriesState => {
 
   React.useEffect(() => {
     stories.getStories()
-  }, [])
+  })
 
   return stories
 }

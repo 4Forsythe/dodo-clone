@@ -7,7 +7,7 @@ interface IDynamicImage extends ImageProps {
   className?: string
 }
 
-export const DynamicImage: React.FC<IDynamicImage> = async ({ src, className, ...props }) => {
+export const DynamicImage: React.FC<IDynamicImage> = async ({ src, alt, className, ...props }) => {
   const { image, base64 } = await getImage(src.toString())
 
   return (
@@ -16,6 +16,7 @@ export const DynamicImage: React.FC<IDynamicImage> = async ({ src, className, ..
       src={src}
       placeholder="blur"
       blurDataURL={base64}
+      alt={alt}
       {...image}
       {...props}
     />

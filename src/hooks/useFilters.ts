@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useSet } from 'react-use'
-import { getSearchParams } from '@/lib/get-search-params'
+import { useGetSearchParams } from '@/hooks'
 
 import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/constants'
 
@@ -24,16 +24,16 @@ export interface IFilterParamsResponse {
 export const useFilters = (): IFilterParamsResponse => {
   /* Размеры */
   const [sizes, { toggle: setSizes }] = useSet(
-    new Set<string>(getSearchParams('sizes', { split: true }))
+    new Set<string>(useGetSearchParams('sizes', { split: true }))
   )
   /* Типы теста */
   const [types, { toggle: setTypes }] = useSet(
-    new Set<string>(getSearchParams('types', { split: true }))
+    new Set<string>(useGetSearchParams('types', { split: true }))
   )
 
   /* Разброс цены */
-  const from = Number(getSearchParams('from'))
-  const to = Number(getSearchParams('to'))
+  const from = Number(useGetSearchParams('from'))
+  const to = Number(useGetSearchParams('to'))
 
   /* Значения границ разброса по умолчанию */
   const minPrice = DEFAULT_PRICE_FROM
@@ -50,7 +50,7 @@ export const useFilters = (): IFilterParamsResponse => {
 
   /* Ингредиенты */
   const [ingredients, { toggle: setIngredients }] = useSet(
-    new Set<string>(getSearchParams('ingredients', { split: true }))
+    new Set<string>(useGetSearchParams('ingredients', { split: true }))
   )
 
   return React.useMemo(
@@ -64,6 +64,6 @@ export const useFilters = (): IFilterParamsResponse => {
       setPrices: formatPrices,
       setIngredients,
     }),
-    [sizes, types, prices, ingredients, setSizes, setTypes, setPrices, setIngredients]
+    [sizes, types, prices, ingredients, setSizes, setTypes, setIngredients]
   )
 }

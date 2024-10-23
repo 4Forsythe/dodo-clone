@@ -32,5 +32,5 @@ export const useUpdateFilters = (filters: IFilterParamsResponse) => {
     }
 
     isMounted.current = true
-  }, [sizes, types, prices, ingredients, category, sortBy])
+  }, [router, sizes, types, prices, ingredients, category, sortBy])
 }

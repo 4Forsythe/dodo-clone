@@ -72,7 +72,7 @@ export const useProductOptions = (variants: ProductVariant[]): IProductVariantRe
     if (!isAvailableType && firstAvailableType) {
       setType(Number(firstAvailableType.value) as PizzaTypes)
     }
-  }, [size, type])
+  }, [size, availableSizes, type, availableTypes])
 
   return {
     size,

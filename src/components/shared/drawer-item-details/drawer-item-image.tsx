@@ -7,10 +7,10 @@ interface IDrawerItemImage extends ImageProps {
   className?: string
 }
 
-export const DrawerItemImage: React.FC<IDrawerItemImage> = ({ className, ...rest }) => {
+export const DrawerItemImage: React.FC<IDrawerItemImage> = ({ alt, className, ...rest }) => {
   return (
     <div className={cn('max-w-[3.75rem] max-h-[3.75rem] rounded-lg', className)}>
-      <Image {...rest} priority />
+      <Image {...rest} alt={alt} priority />
     </div>
   )
 }

@@ -12,6 +12,7 @@ export const ProductPreview: React.FC<IProductPreview> = ({
   width,
   height,
   size,
+  alt,
   className,
   ...rest
 }) => {
@@ -30,6 +31,7 @@ export const ProductPreview: React.FC<IProductPreview> = ({
         })}
         width={width || 350}
         height={height || 350}
+        alt={alt}
         priority
         {...rest}
       />
