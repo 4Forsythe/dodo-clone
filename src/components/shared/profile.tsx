@@ -8,8 +8,8 @@ import { toast } from 'sonner'
 import { Mails, Pizza, TriangleAlert } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 
-import { Button } from '@/components/ui'
-import { Container, ProfileForm, TipBlock } from '@/components/shared'
+import { Button, Switch } from '@/components/ui'
+import { Container, Heading, OrderList, ProfileForm, TipBlock } from '@/components/shared'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/alert-dialog'
 
 import { route } from '@/config'
-import { deleteUser, sendCode } from '@/app/actions'
+import { deleteUser, sendCode, updateUser } from '@/app/actions'
 
 import type { User } from '@prisma/client'
 
@@ -38,6 +38,8 @@ export const Profile: React.FC<IProfile> = ({ profile, isActivated, className })
 
   const [isSending, setIsSending] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
+
+  const [isSubscribed, setIsSubscribed] = React.useState(profile.isSubscribed)
 
   const onCloseTip = () => {
     router.replace(route.PROFILE)
@@ -54,6 +56,24 @@ export const Profile: React.FC<IProfile> = ({ profile, isActivated, className })
     } catch (error) {
       toast.error('Сейчас мы не можем отправить письмо...')
       console.error('Profile: onSendMail()', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const onSubscribe = async (value: boolean) => {
+    try {
+      setIsLoading(true)
+      setIsSubscribed(value)
+
+      await updateUser({ isSubscribed: value })
+
+      value
+        ? toast.success('Теперь вы подписаны на скидки')
+        : toast.success('Теперь вы отписаны от скидок')
+    } catch (error) {
+      toast.error('Ой! Кажется, что-то пошло не так...')
+      console.error('Profile: onSubscribe()', error)
     } finally {
       setIsLoading(false)
     }
@@ -120,7 +140,24 @@ export const Profile: React.FC<IProfile> = ({ profile, isActivated, className })
           />
         )}
 
-        <ProfileForm profile={profile} />
+        <div className="max-w-[544px] gap-5 flex flex-col">
+          <ProfileForm profile={profile} />
+
+          <div className="flex flex-col">
+            <Heading text="Подписки" size="md" />
+            <div className="gap-2.5 flex items-center">
+              <Switch
+                id="isSubscribed"
+                checked={isSubscribed}
+                onCheckedChange={() => onSubscribe(!isSubscribed)}
+                disabled={isLoading}
+              />
+              <label htmlFor="isSubscribed">Присылайте мне скидки и специальные предложения</label>
+            </div>
+          </div>
+
+          <OrderList />
+        </div>
 
         <div className="mt-20 gap-2.5 flex items-center">
           <Button

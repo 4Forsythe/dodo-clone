@@ -21,3 +21,9 @@ export const PIZZA_TYPES = Object.entries(PIZZA_TYPES_MAP).map(([value, text]) =
   text,
   value,
 }))
+
+export const ORDER_STATUS_MAP = {
+  PENDING: 'Принят',
+  SUCCESSED: 'Оплачен',
+  CANCELLED: 'Отменен',
+} as const
