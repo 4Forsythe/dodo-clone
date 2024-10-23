@@ -6,9 +6,10 @@ import { getUserSession } from '@/lib/get-user-session'
 
 /* getProfile() */
 export async function GET() {
-  try {
-    const user = await getUserSession()
+  // Вынес из trycatch, чтобы предотвратить генерацию динамической страницы Next.js (для фикса [Error]: Dynamic server usage)
+  const user = await getUserSession()
 
+  try {
     if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized', message: 'User is unauthorized' },

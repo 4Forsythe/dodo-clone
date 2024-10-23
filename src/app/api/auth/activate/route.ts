@@ -5,10 +5,11 @@ import { prisma } from '@/prisma/prisma-client'
 import { route } from '@/config'
 
 export async function GET(request: NextRequest) {
-  try {
-    const code = request.nextUrl.searchParams.get('code')
-    const userId = request.nextUrl.searchParams.get('user')
+  // Вынес из trycatch, чтобы предотвратить генерацию динамической страницы Next.js (для фикса [Error]: Dynamic server usage)
+  const code = request.nextUrl.searchParams.get('code')
+  const userId = request.nextUrl.searchParams.get('user')
 
+  try {
     if (!code || !userId) {
       return NextResponse.json(
         { error: 'Bad request', message: 'Code and user is required' },

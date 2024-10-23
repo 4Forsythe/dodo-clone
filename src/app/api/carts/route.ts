@@ -12,9 +12,9 @@ import { prisma } from '@/prisma/prisma-client'
 
 /* create() */
 export async function POST(request: NextRequest) {
-  try {
-    const body = (await request.json()) as ICreateCartItem
+  const body = (await request.json()) as ICreateCartItem
 
+  try {
     let token = request.cookies.get(CART_TOKEN)?.value
 
     if (!token) {
