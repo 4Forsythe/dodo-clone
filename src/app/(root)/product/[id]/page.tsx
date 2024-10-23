@@ -3,9 +3,19 @@ import type { Metadata } from 'next'
 import { cache } from 'react'
 import { notFound } from 'next/navigation'
 
-import { getProduct } from '@/lib'
+import { getProduct, getRecommendations } from '@/lib'
 
-import { Container, ProductConstructor } from '@/components/shared'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
+import { Container, ProductConstructor, ProductGroup } from '@/components/shared'
+
+import { route } from '@/config'
 
 interface IProductPage {
   params: { id: string }
@@ -37,9 +47,33 @@ export default async function ProductPage({ params: { id } }: IProductPage) {
 
   if (!product) notFound()
 
+  const recommendations = await getRecommendations(product.categoryId)
+
+  const { name, category } = product
+
   return (
-    <Container className="py-20 flex flex-col">
-      <ProductConstructor product={product} />
+    <Container className="pb-24 flex flex-col">
+      <Breadcrumb className="my-10">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href={route.HOME}>Главная</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href={`${route.HOME}#category=${category.id}`}>
+              {category.name}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{name}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
+      <ProductConstructor className="mb-14" product={product} />
+
+      <ProductGroup className="grid-cols-4" title="Рекомендации" items={recommendations} />
     </Container>
   )
 }

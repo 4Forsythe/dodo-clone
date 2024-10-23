@@ -14,7 +14,7 @@ import type { ProductType } from '@/types'
 interface IProductGroup {
   title: string
   items: ProductType[]
-  categoryId: number
+  categoryId?: number
   className?: string
 }
 
@@ -28,13 +28,17 @@ export const ProductGroup: React.FC<IProductGroup> = ({ title, items, categoryId
   })
 
   React.useEffect(() => {
-    if (intersection?.isIntersecting) {
+    if (categoryId && intersection?.isIntersecting) {
       setCategory(categoryId)
     }
-  }, [categoryId, intersection?.isIntersecting])
+  }, [categoryId, setCategory, intersection?.isIntersecting])
 
   return (
-    <section id={`category=${categoryId}`} ref={intersectionRef} className="flex flex-col">
+    <section
+      id={categoryId ? `category=${categoryId}` : undefined}
+      ref={intersectionRef}
+      className="flex flex-col"
+    >
       {/* Заголовок */}
       <Heading text={title} size="lg" />
 
