@@ -49,12 +49,7 @@ export const TopBar: React.FC<ITopBar> = ({ categories, className }) => {
 
         {/* Взаимодействие */}
         <div className="gap-3 flex items-center">
-          <SortPopup
-            className={cn(
-              'right-0 translate-x-0 absolute transition duration-200',
-              hasControls && '-translate-x-[14.5rem]'
-            )}
-          />
+          <SortPopup />
 
           <div
             className={cn(

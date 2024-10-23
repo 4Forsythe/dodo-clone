@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 
 import { cn } from '@/lib'
+import { route } from '@/config'
 
 import { Container } from '@/components/shared'
 
@@ -12,6 +13,9 @@ interface IFooter {
 }
 
 export const Footer: React.FC<IFooter> = ({ className }) => {
+  const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL
+  const GITHUB_USERNAME = process.env.GITHUB_USERNAME
+
   return (
     <footer className={cn('text-white bg-[#202020]', className)}>
       <Container className="pt-8 pb-5 flex flex-col">
@@ -20,7 +24,7 @@ export const Footer: React.FC<IFooter> = ({ className }) => {
             <div className="space-y-1 flex flex-col">
               <span className="mb-1 text-[17px] font-bold uppercase">Dodo Clone</span>
               <Link
-                href="/"
+                href={route.ABOUT}
                 className="font-semibold text-neutral-400 transition duration-200 hover:text-white"
               >
                 О нас
@@ -29,7 +33,8 @@ export const Footer: React.FC<IFooter> = ({ className }) => {
             <div className="space-y-1 flex flex-col">
               <span className="mb-1 text-[17px] font-bold">Связь</span>
               <Link
-                href="/"
+                href={TELEGRAM_URL as string}
+                target="_blank"
                 className="font-semibold text-neutral-400 transition duration-200 hover:text-white"
               >
                 Чат
@@ -38,7 +43,7 @@ export const Footer: React.FC<IFooter> = ({ className }) => {
             <div className="space-y-1 flex flex-col">
               <span className="mb-1 text-[17px] font-bold">Поддержка</span>
               <Link
-                href="/"
+                href={route.DONATE}
                 className="font-semibold text-neutral-400 transition duration-200 hover:text-white"
               >
                 Купить мне кофе
@@ -47,7 +52,7 @@ export const Footer: React.FC<IFooter> = ({ className }) => {
           </div>
           <div className="flex flex-col items-end justify-end">
             <Link
-              href="/"
+              href="mailto:forsythe.dev@gmail.com"
               className="text-[17px] font-semibold text-neutral-400 transition duration-200 hover:text-white"
             >
               forsythe.dev@gmail.com
@@ -62,7 +67,8 @@ export const Footer: React.FC<IFooter> = ({ className }) => {
             </span>
           </div>
           <Link
-            href="/"
+            href={`https://github.com/${GITHUB_USERNAME}`}
+            target="_blank"
             className="w-8 h-8 p-1.5 inline-flex items-center justify-center text-neutral-300/80 bg-[#c4c4c440] rounded transition duration-200 hover:bg-neutral-500/90"
           >
             <svg

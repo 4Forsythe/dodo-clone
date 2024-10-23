@@ -39,7 +39,7 @@ export const SortPopup: React.FC<ISortPopup> = ({ className }) => {
       <PopoverContent className="w-60 mt-1 p-0 text-sm">
         <ul className="p-2.5 gap-1.5 flex flex-col">
           {SORTS.map((sort) => (
-            <PopoverClose asChild>
+            <PopoverClose key={sort.property} asChild>
               <li
                 key={sort.property}
                 className={cn(

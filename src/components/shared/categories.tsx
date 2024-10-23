@@ -3,10 +3,10 @@
 import React from 'react'
 import Link from 'next/link'
 
-import type { Category } from '@prisma/client'
-
 import { cn } from '@/lib/utils'
 import { useFiltersStore } from '@/store'
+
+import type { Category } from '@prisma/client'
 
 interface ICategories {
   items: Category[]
@@ -28,7 +28,7 @@ export const Categories: React.FC<ICategories> = ({ items, className }) => {
             category === item.id && 'text-primary bg-white shadow-md shadow-gray-200'
           )}
         >
-          <Link href={`/#category=${item.id}`} className="px-4 py-1.5">
+          <Link href={`#category=${item.id}`} className="px-4 py-1.5">
             {item.name}
           </Link>
         </li>
