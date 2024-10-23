@@ -4,8 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { useDrawerItemDetails } from '@/hooks'
-import { calcCartTotal, declineNoun, formatPhone, getOrder } from '@/lib'
+import { calcCartTotal, declineNoun, formatPhone, getDrawerItemDetails, getOrder } from '@/lib'
 
 import { CheckoutBlock, Container, Heading, OrderCartItem } from '@/components/shared'
 
@@ -31,8 +30,18 @@ export default async function ThanksPage({
 
   if (!order) return notFound()
 
-  const { id, amount, items, customerName, customerEmail, customerPhone, address, createdAt } =
-    order
+  const {
+    id,
+    amount,
+    items,
+    customerName,
+    customerEmail,
+    customerPhone,
+    address,
+    deliveredAt,
+    isContactless,
+    createdAt,
+  } = order
 
   const { deliveryPrice } = calcCartTotal(amount)
 
@@ -45,14 +54,24 @@ export default async function ThanksPage({
     minute: '2-digit',
   })
 
+  const deliveredTime = `с ${deliveredAt.toLocaleTimeString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+  })} до ${new Date(
+    new Date(deliveredAt).setMinutes(deliveredAt.getMinutes() + 25)
+  ).toLocaleTimeString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+  })}`
+
   return (
     <Container className="pb-5">
       <Heading text="Спасибо за заказ!" className="font-semibold" size="xl" />
 
       <div className="mt-5 mb-10 flex">
-        <div className="my-2.5 space-y-10 p-4 flex-1">
+        <div className="my-2.5 space-y-8 p-4 flex-1">
           <div className="flex flex-col">
-            <span className="font-medium text-gray-400 leading-6">Заказ №{id}</span>
+            <span className="font-semibold text-gray-400 leading-6">Заказ №{id}</span>
             <span className="font-medium text-gray-400 leading-6">
               {date} в {time}
             </span>
@@ -62,15 +81,16 @@ export default async function ThanksPage({
             <div className="flex flex-col">
               <h5 className="mb-2 text-lg font-bold">{customerName}</h5>
               <span className="mb-1 font-semibold text-gray-400">{customerEmail}</span>
-              <span className="text-sm font-semibold text-gray-400">
-                {formatPhone(customerPhone)}
-              </span>
+              <span className="font-medium text-gray-400">{formatPhone(customerPhone)}</span>
             </div>
 
             <div className="flex flex-col">
               <h5 className="mb-2 text-lg font-bold">Доставка</h5>
               <span className="mb-1 font-semibold text-gray-400">{address}</span>
-              <span className="text-sm font-semibold text-gray-400">с 14:00 по 15:00</span>
+              <span className="font-medium text-gray-400">{deliveredTime}</span>
+              {isContactless && (
+                <span className="font-medium text-gray-400">Бесконтактная доставка</span>
+              )}
             </div>
           </div>
         </div>
@@ -94,7 +114,7 @@ export default async function ThanksPage({
           </div>
           <div className="max-h-[264px] my-4 pr-3 gap-3 grid grid-cols-2 items-center overflow-auto scrollbar">
             {items.map((item) => {
-              const { details, doppings } = useDrawerItemDetails(
+              const { details, doppings } = getDrawerItemDetails(
                 item.variant.size,
                 Number(item.variant.type),
                 item.variant.weight,
@@ -103,6 +123,7 @@ export default async function ThanksPage({
 
               return (
                 <OrderCartItem
+                  key={item.id}
                   className="p-4 bg-neutral-100 rounded-3xl"
                   id={item.id}
                   name={item.variant.product.name}
